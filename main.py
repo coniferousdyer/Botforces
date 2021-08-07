@@ -55,4 +55,39 @@ async def search(ctx, handle):
             # Sending the embed
             await ctx.send(embed=Embed)
 
+
+@client.command()
+async def stalk(ctx, handle, number=10):
+    async with aiohttp.ClientSession() as session:
+        async with session.get('https://codeforces.com/api/user.status?handle={}&from=1&count={}'.format(handle, number)) as r:
+
+            # If user was not found
+            if not r.ok:
+                await ctx.send("Sorry, user with handle {} could not be found.".format(handle))
+                return
+
+            # Reading the data as JSON data and storing the dictionary in data variable
+            data = await r.json()
+
+            # Creating the string of submissions to be the description of Embed
+            submissions = ''
+            count = 1
+            for problem in data["result"]:
+                if count == number:
+                    submissions += "{}. {} - {} ({})".format(
+                        count, problem["problem"]["name"], problem["problem"]["rating"], problem["verdict"])
+                else:
+                    submissions += "{}. {} - {} ({})\n".format(
+                        count, problem["problem"]["name"], problem["problem"]["rating"], problem["verdict"])
+                count += 1
+
+            # Creating an embed
+            Embed = discord.Embed(
+                title="Last {} submissions of {}".format(number, handle),
+                description=submissions,
+                color=0xff0000)
+
+            # Sending the embed
+            await ctx.send(embed=Embed)
+
 client.run(TOKEN)
