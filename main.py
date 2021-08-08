@@ -16,6 +16,7 @@ async def on_ready():
     print("Bot is online!")
 
 
+# Command to search for a user and display their basic details
 @client.command()
 async def search(ctx, handle):
     async with aiohttp.ClientSession() as session:
@@ -56,6 +57,7 @@ async def search(ctx, handle):
             await ctx.send(embed=Embed)
 
 
+# Command to display the last n submissions of a user
 @client.command()
 async def stalk(ctx, handle, number=10):
     async with aiohttp.ClientSession() as session:
@@ -85,6 +87,45 @@ async def stalk(ctx, handle, number=10):
             Embed = discord.Embed(
                 title="Last {} submissions of {}".format(number, handle),
                 description=submissions,
+                color=0xff0000)
+
+            # Sending the embed
+            await ctx.send(embed=Embed)
+
+
+# Command to check the rating changes of a user for the last n contests
+@client.command()
+async def ratingchange(ctx, handle, number=10):
+    async with aiohttp.ClientSession() as session:
+        async with session.get('https://codeforces.com/api/user.rating?handle={}'.format(handle)) as r:
+
+            # If user was not found
+            if not r.ok:
+                await ctx.send("Sorry, user with handle {} could not be found.".format(handle))
+                return
+
+            # Reading the data as JSON data and storing the dictionary in data variable
+            data = await r.json()
+
+            # Reversing the list data["result"]
+            data["result"].reverse()
+
+            count = 1
+            changes = ''
+            for contest in data["result"]:
+                if count == number:
+                    changes += "{}. {} - {} ({} -> {})".format(count, contest["contestName"],
+                                                               contest["newRating"] - contest["oldRating"], contest["oldRating"], contest["newRating"])
+                    break
+                else:
+                    changes += "{}. {} - {} ({} -> {})\n".format(count, contest["contestName"],
+                                                                 contest["newRating"] - contest["oldRating"], contest["oldRating"], contest["newRating"])
+                count += 1
+
+            # Creating an embed
+            Embed = discord.Embed(
+                title="Last {} rating changes of {}".format(number, handle),
+                description=changes,
                 color=0xff0000)
 
             # Sending the embed
