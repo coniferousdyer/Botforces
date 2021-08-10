@@ -51,19 +51,28 @@ async def search(ctx, handle):
                                       data["result"][0]["handle"]),
                                   color=color)
 
-            Embed.set_thumbnail(url = data["result"][0]["avatar"])
+            Embed.set_thumbnail(url=data["result"][0]["avatar"])
+
+            if 'firstName' in data["result"][0] and 'lastName' in data["result"][0]:
+                Embed.add_field(
+                    name="Name", value=data["result"][0]["firstName"] + ' ' + data["result"][0]["lastName"], inline=False)
+
+            if 'city' in data["result"][0] and 'country' in data["result"][0]:
+                Embed.add_field(
+                    name="City", value=data["result"][0]["city"] + ', ' + data["result"][0]["country"], inline=False)
+
             Embed.add_field(
-                name = "Rank", value = data["result"][0]["rank"].title(), inline = False)
-            Embed.add_field(name = "Rating",
-                            value = data["result"][0]["rating"], inline = False)
+                name="Rank", value=data["result"][0]["rank"].title(), inline=False)
+            Embed.add_field(name="Rating",
+                            value=data["result"][0]["rating"], inline=False)
 
             # Sending the embed
-            await ctx.send(embed = Embed)
+            await ctx.send(embed=Embed)
 
 
 # Command to display the last n submissions of a user
 @ client.command()
-async def stalk(ctx, handle, number = 10):
+async def stalk(ctx, handle, number=10):
     async with aiohttp.ClientSession() as session:
         async with session.get('https://codeforces.com/api/user.status?handle={}&from=1&count={}'.format(handle, number)) as r:
 
@@ -73,11 +82,11 @@ async def stalk(ctx, handle, number = 10):
                 return
 
             # Reading the data as JSON data and storing the dictionary in data variable
-            data=await r.json()
+            data = await r.json()
 
             # Creating the string of submissions to be the description of Embed
-            submissions=''
-            count=1
+            submissions = ''
+            count = 1
             for problem in data["result"]:
                 if count == number:
                     submissions += "{}. {} - {} ({})".format(
