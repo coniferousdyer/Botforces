@@ -144,8 +144,10 @@ async def problem(ctx, *args):
 
             # If rating was given, i.e. rating != 0, then filter the list
             if rating != 0:
-                data["result"]["problems"] = list(filter(
-                    lambda p: p["rating"] == rating, data["result"]["problems"]))
+                data["result"]["problems"] = filter(
+                    lambda p: p["rating"] == rating, data["result"]["problems"])
+
+            data["result"]["problems"] = list(data["result"]["problems"])
 
             # In case no problems are found
             if len(data["result"]["problems"]) == 0:
