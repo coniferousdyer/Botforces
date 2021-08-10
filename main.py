@@ -1,6 +1,7 @@
 import discord
 import json
 import aiohttp
+import random
 from discord.ext import commands
 
 client = commands.Bot(command_prefix='-')
@@ -70,11 +71,12 @@ async def search(ctx, handle):
             await ctx.send(embed=Embed)
 
 
+# ERROR HANDLING TO BE DONE - ALL ACS ONLY + PROBLEMS WITH NO RATINGS
 # Command to display the last n submissions of a user
 @ client.command()
 async def stalk(ctx, handle, number=10):
     async with aiohttp.ClientSession() as session:
-        async with session.get('https://codeforces.com/api/user.status?handle={}&from=1&count={}'.format(handle, number)) as r:
+        async with session.get('https://codeforces.com/api/user.status?handle={}&count={}'.format(handle, number)) as r:
 
             # If user was not found
             if not r.ok:
@@ -103,6 +105,75 @@ async def stalk(ctx, handle, number=10):
                 color=0xff0000)
 
             # Sending the embed
+            await ctx.send(embed=Embed)
+
+
+# Command to suggest a random problem, with optional tags and rating
+@client.command()
+async def problem(ctx, *args):
+    async with aiohttp.ClientSession() as session:
+
+        # Saving the URL as a string
+        url = 'https://codeforces.com/api/problemset.problems'
+        rating = 0
+        check = False
+
+        # Separating the rating and the tags
+        for arg in args:
+            if arg.isdigit():
+                rating = int(arg)
+            else:
+                if not check:
+                    url += '?tags={}'.format(arg)
+                    check = True
+                else:
+                    url += ';{}'.format(arg)
+
+        async with session.get(url) as r:
+
+            # If URL was not found
+            if not r.ok:
+                await ctx.send("Sorry, an error occurred.")
+                return
+
+            # Reading the data as JSON data and storing the dictionary in data variable
+            data = await r.json()
+
+            # Filtering out the problems without rating
+            data["result"]["problems"] = filter(lambda p: 'rating' in p, data["result"]["problems"])
+
+            # If rating was given, i.e. rating != 0, then filter the list
+            if rating != 0:
+                data["result"]["problems"] = list(filter(
+                    lambda p: p["rating"] == rating, data["result"]["problems"]))
+
+            # In case no problems are found
+            if len(data["result"]["problems"]) == 0:
+                await ctx.send("Sorry, no problems could be found. Please try again.")
+                return
+
+            # Storing problem
+            problem = data["result"]["problems"][random.randint(
+                0, len(data["result"]["problems"]) - 1)]
+
+            # Deleting obtained data
+            del data
+
+            # Creating an embed
+            Embed = discord.Embed(title="{}{}. {}".format(problem["contestId"], problem["index"], problem["name"]),
+                                  url="https://codeforces.com/problemset/problem/{}/{}".format(
+                                      problem["contestId"], problem["index"]),
+                                  color=0xff0000)
+
+            Embed.add_field(
+                name="Rating", value=problem["rating"], inline=False)
+
+            # Formatting the strings in the list and joining them to form a string
+            problem["tags"] = map(
+                lambda str: '||' + str + '||', problem["tags"])
+            tags = ','.join(problem["tags"])
+            Embed.add_field(name="Tags", value=tags)
+
             await ctx.send(embed=Embed)
 
 client.run(TOKEN)
