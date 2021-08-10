@@ -49,17 +49,21 @@ async def search(ctx, handle):
             Embed = discord.Embed(title=data["result"][0]["handle"],
                                   url="https://codeforces.com/profile/{}".format(
                                       data["result"][0]["handle"]),
-                                  description="Rank: {}\nRating: {}".format(
-                                      data["result"][0]["rank"], data["result"][0]["rating"]),
                                   color=color)
 
+            Embed.set_thumbnail(url = data["result"][0]["avatar"])
+            Embed.add_field(
+                name = "Rank", value = data["result"][0]["rank"].title(), inline = False)
+            Embed.add_field(name = "Rating",
+                            value = data["result"][0]["rating"], inline = False)
+
             # Sending the embed
-            await ctx.send(embed=Embed)
+            await ctx.send(embed = Embed)
 
 
 # Command to display the last n submissions of a user
-@client.command()
-async def stalk(ctx, handle, number=10):
+@ client.command()
+async def stalk(ctx, handle, number = 10):
     async with aiohttp.ClientSession() as session:
         async with session.get('https://codeforces.com/api/user.status?handle={}&from=1&count={}'.format(handle, number)) as r:
 
@@ -69,11 +73,11 @@ async def stalk(ctx, handle, number=10):
                 return
 
             # Reading the data as JSON data and storing the dictionary in data variable
-            data = await r.json()
+            data=await r.json()
 
             # Creating the string of submissions to be the description of Embed
-            submissions = ''
-            count = 1
+            submissions=''
+            count=1
             for problem in data["result"]:
                 if count == number:
                     submissions += "{}. {} - {} ({})".format(
@@ -87,45 +91,6 @@ async def stalk(ctx, handle, number=10):
             Embed = discord.Embed(
                 title="Last {} submissions of {}".format(number, handle),
                 description=submissions,
-                color=0xff0000)
-
-            # Sending the embed
-            await ctx.send(embed=Embed)
-
-
-# Command to check the rating changes of a user for the last n contests
-@client.command()
-async def ratingchange(ctx, handle, number=10):
-    async with aiohttp.ClientSession() as session:
-        async with session.get('https://codeforces.com/api/user.rating?handle={}'.format(handle)) as r:
-
-            # If user was not found
-            if not r.ok:
-                await ctx.send("Sorry, user with handle {} could not be found.".format(handle))
-                return
-
-            # Reading the data as JSON data and storing the dictionary in data variable
-            data = await r.json()
-
-            # Reversing the list data["result"]
-            data["result"].reverse()
-
-            count = 1
-            changes = ''
-            for contest in data["result"]:
-                if count == number:
-                    changes += "{}. {} - {} ({} -> {})".format(count, contest["contestName"],
-                                                               contest["newRating"] - contest["oldRating"], contest["oldRating"], contest["newRating"])
-                    break
-                else:
-                    changes += "{}. {} - {} ({} -> {})\n".format(count, contest["contestName"],
-                                                                 contest["newRating"] - contest["oldRating"], contest["oldRating"], contest["newRating"])
-                count += 1
-
-            # Creating an embed
-            Embed = discord.Embed(
-                title="Last {} rating changes of {}".format(number, handle),
-                description=changes,
                 color=0xff0000)
 
             # Sending the embed
