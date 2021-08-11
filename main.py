@@ -211,19 +211,23 @@ async def upcoming(ctx):
             for contest in contestList:
 
                 # Obtaining the time of the contest (dateList[0] -> date, dateList[1] -> time)
-                date = str(datetime.datetime.fromtimestamp(contest["startTimeSeconds"]))
+                date = str(datetime.datetime.fromtimestamp(
+                    contest["startTimeSeconds"]))
                 dateList = date.split()
                 dateList[0] = dateList[0].split("-")
                 dateList[1] = dateList[1].split(":")
 
-                date = datetime.datetime(int(dateList[0][0]), int(dateList[0][1]), int(dateList[0][2]), int(dateList[1][0]), int(dateList[1][1]), int(dateList[1][2]))
+                date = datetime.datetime(int(dateList[0][0]), int(dateList[0][1]), int(
+                    dateList[0][2]), int(dateList[1][0]), int(dateList[1][1]), int(dateList[1][2]))
                 dateString = date.strftime("%b %d, %Y, %H:%M")
 
                 # Obtaining contest duration
-                duration = str(datetime.timedelta(seconds=contest["durationSeconds"]))
+                duration = str(datetime.timedelta(
+                    seconds=contest["durationSeconds"]))
                 duration = duration.split(":")
 
-                Embed.add_field(name=contest["name"], value="{} - {} - {} hrs, {} mins".format(contest["id"], dateString, duration[0], duration[1]), inline=False)
+                Embed.add_field(name=contest["name"], value="{} - {} - {} hrs, {} mins".format(
+                    contest["id"], dateString, duration[0], duration[1]), inline=False)
 
             # Sending embed
             await ctx.send(embed=Embed)
