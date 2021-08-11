@@ -2,6 +2,7 @@ import discord
 import json
 import aiohttp
 import random
+import datetime
 from discord.ext import commands
 
 client = commands.Bot(command_prefix='-')
@@ -19,7 +20,7 @@ async def on_ready():
 
 # Command to search for a user and display their basic details
 @client.command()
-async def search(ctx, handle):
+async def user(ctx, handle):
     async with aiohttp.ClientSession() as session:
         async with session.get('https://codeforces.com/api/user.info?handles={}'.format(handle)) as r:
 
@@ -140,7 +141,8 @@ async def problem(ctx, *args):
             data = await r.json()
 
             # Filtering out the problems without rating
-            data["result"]["problems"] = filter(lambda p: 'rating' in p, data["result"]["problems"])
+            data["result"]["problems"] = filter(
+                lambda p: 'rating' in p, data["result"]["problems"])
 
             # If rating was given, i.e. rating != 0, then filter the list
             if rating != 0:
@@ -158,9 +160,6 @@ async def problem(ctx, *args):
             problem = data["result"]["problems"][random.randint(
                 0, len(data["result"]["problems"]) - 1)]
 
-            # Deleting obtained data
-            del data
-
             # Creating an embed
             Embed = discord.Embed(title="{}{}. {}".format(problem["contestId"], problem["index"], problem["name"]),
                                   url="https://codeforces.com/problemset/problem/{}/{}".format(
@@ -176,6 +175,57 @@ async def problem(ctx, *args):
             tags = ','.join(problem["tags"])
             Embed.add_field(name="Tags", value=tags)
 
+            # Sending embed
+            await ctx.send(embed=Embed)
+
+
+# Command to display upcoming contests
+@client.command()
+async def upcoming(ctx):
+    async with aiohttp.ClientSession() as session:
+        async with session.get('https://codeforces.com/api/contest.list') as r:
+
+            # If URL was not found
+            if not r.ok:
+                await ctx.send("Sorry, an error occurred.")
+                return
+
+            # Reading the data as JSON data and storing the dictionary in data variable
+            data = await r.json()
+
+            # Creating a list to store upcoming contests
+            contestList = []
+            for contest in data["result"]:
+                if contest["phase"] != "BEFORE":
+                    break
+                contestList.append(contest)
+
+            # Reversing the contest list
+            contestList.reverse()
+
+            # Creating embed
+            Embed = discord.Embed(title="List of upcoming contests",
+                                  color=0xff0000)
+
+            # Adding each contest as a field to the embed
+            for contest in contestList:
+
+                # Obtaining the time of the contest (dateList[0] -> date, dateList[1] -> time)
+                date = str(datetime.datetime.fromtimestamp(contest["startTimeSeconds"]))
+                dateList = date.split()
+                dateList[0] = dateList[0].split("-")
+                dateList[1] = dateList[1].split(":")
+
+                date = datetime.datetime(int(dateList[0][0]), int(dateList[0][1]), int(dateList[0][2]), int(dateList[1][0]), int(dateList[1][1]), int(dateList[1][2]))
+                dateString = date.strftime("%b %d, %Y, %H:%M")
+
+                # Obtaining contest duration
+                duration = str(datetime.timedelta(seconds=contest["durationSeconds"]))
+                duration = duration.split(":")
+
+                Embed.add_field(name=contest["name"], value="{} - {} - {} hrs, {} mins".format(contest["id"], dateString, duration[0], duration[1]), inline=False)
+
+            # Sending embed
             await ctx.send(embed=Embed)
 
 client.run(TOKEN)
