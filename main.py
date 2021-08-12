@@ -3,6 +3,7 @@ import json
 import aiohttp
 import random
 import datetime
+import time
 from discord.ext import commands
 
 client = commands.Bot(command_prefix='-')
@@ -226,8 +227,8 @@ async def upcoming(ctx):
                     seconds=contest["durationSeconds"]))
                 duration = duration.split(":")
 
-                Embed.add_field(name=contest["name"], value="{} - {} - {} hrs, {} mins".format(
-                    contest["id"], dateString, duration[0], duration[1]), inline=False)
+                Embed.add_field(name=contest["name"], value="{} - {} {} - {} hrs, {} mins".format(
+                    contest["id"], dateString, time.tzname[0], duration[0], duration[1]), inline=False)
 
             # Sending embed
             await ctx.send(embed=Embed)
