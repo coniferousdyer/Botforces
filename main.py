@@ -69,6 +69,8 @@ async def user(ctx, handle):
             Embed.add_field(name="Rating",
                             value=data["result"][0]["rating"], inline=False)
 
+            Embed.set_footer(icon_url=ctx.author.avatar_url, text=str(ctx.author))
+
             # Sending the embed
             await ctx.send(embed=Embed)
 
@@ -105,6 +107,8 @@ async def stalk(ctx, handle, number=10):
                 title="Last {} submissions of {}".format(number, handle),
                 description=submissions,
                 color=0xff0000)
+
+            Embed.set_footer(icon_url=ctx.author.avatar_url, text=str(ctx.author))
 
             # Sending the embed
             await ctx.send(embed=Embed)
@@ -176,6 +180,8 @@ async def problem(ctx, *args):
             tags = ','.join(problem["tags"])
             Embed.add_field(name="Tags", value=tags)
 
+            Embed.set_footer(icon_url=ctx.author.avatar_url, text=str(ctx.author))
+
             # Sending embed
             await ctx.send(embed=Embed)
 
@@ -229,6 +235,8 @@ async def upcoming(ctx):
 
                 Embed.add_field(name=contest["name"], value="{} - {} {} - {} hrs, {} mins".format(
                     contest["id"], dateString, time.tzname[0], duration[0], duration[1]), inline=False)
+
+                Embed.set_footer(icon_url=ctx.author.avatar_url, text=str(ctx.author))
 
             # Sending embed
             await ctx.send(embed=Embed)
