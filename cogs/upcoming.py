@@ -56,8 +56,8 @@ class Upcoming(commands.Cog):
                         seconds=contest["durationSeconds"]))
                     duration = duration.split(":")
 
-                    Embed.add_field(name=contest["name"], value="{} - {} {} - {} hrs, {} mins".format(
-                        contest["id"], dateString, time.tzname[0], duration[0], duration[1]), inline=False)
+                    Embed.add_field(
+                        name=contest["name"], value=f"{contest['id']} - {dateString} {time.tzname[0]} - {duration[0]} hrs, {duration[1]} mins", inline=False)
 
                     Embed.set_footer(icon_url=ctx.author.avatar_url,
                                      text=str(ctx.author))

@@ -12,11 +12,11 @@ class Stalk(commands.Cog):
     @ commands.command()
     async def stalk(self, ctx, handle, number=10):
         async with aiohttp.ClientSession() as session:
-            async with session.get('https://codeforces.com/api/user.status?handle={}&count={}'.format(handle, number)) as r:
+            async with session.get(f'https://codeforces.com/api/user.status?handle={handle}&count={number}') as r:
 
                 # If user was not found
                 if not r.ok:
-                    await ctx.send("Sorry, user with handle {} could not be found.".format(handle))
+                    await ctx.send(f"Sorry, user with handle {handle} could not be found.")
                     return
 
                 # Reading the data as JSON data and storing the dictionary in data variable
@@ -27,16 +27,14 @@ class Stalk(commands.Cog):
                 count = 1
                 for problem in data["result"]:
                     if count == number:
-                        submissions += "{}. {} - {} ({})".format(
-                            count, problem["problem"]["name"], problem["problem"]["rating"], problem["verdict"])
+                        submissions += f"{count}. {problem['problem']['name']} - {problem['problem']['rating']} ({problem['verdict']})"
                     else:
-                        submissions += "{}. {} - {} ({})\n".format(
-                            count, problem["problem"]["name"], problem["problem"]["rating"], problem["verdict"])
+                        submissions += f"{count}. {problem['problem']['name']} - {problem['problem']['rating']} ({problem['verdict']})\n"
                     count += 1
 
                 # Creating an embed
                 Embed = discord.Embed(
-                    title="Last {} submissions of {}".format(number, handle),
+                    title=f"Last {number} submissions of {handle}",
                     description=submissions,
                     color=0xff0000)
 

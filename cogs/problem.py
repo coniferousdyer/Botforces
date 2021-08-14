@@ -24,10 +24,10 @@ class Problem(commands.Cog):
                     rating = int(arg)
                 else:
                     if not check:
-                        url += '?tags={}'.format(arg)
+                        url += f'?tags={arg}'
                         check = True
                     else:
-                        url += ';{}'.format(arg)
+                        url += f';{arg}'
 
             async with session.get(url) as r:
 
@@ -60,9 +60,8 @@ class Problem(commands.Cog):
                     0, len(data["result"]["problems"]) - 1)]
 
                 # Creating an embed
-                Embed = discord.Embed(title="{}{}. {}".format(problem["contestId"], problem["index"], problem["name"]),
-                                      url="https://codeforces.com/problemset/problem/{}/{}".format(
-                                          problem["contestId"], problem["index"]),
+                Embed = discord.Embed(title=f"{problem['contestId']}{problem['index']}. {problem['name']}",
+                                      url=f"https://codeforces.com/problemset/problem/{problem['contestId']}/{problem['index']}",
                                       color=0xff0000)
 
                 Embed.add_field(

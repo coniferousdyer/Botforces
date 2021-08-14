@@ -11,11 +11,11 @@ class User(commands.Cog):
     @commands.command()
     async def user(self, ctx, handle):
         async with aiohttp.ClientSession() as session:
-            async with session.get('https://codeforces.com/api/user.info?handles={}'.format(handle)) as r:
+            async with session.get(f'https://codeforces.com/api/user.info?handles={handle}') as r:
 
                 # If the user was not found
                 if not r.ok:
-                    await ctx.send("Sorry, user with handle {} could not be found.".format(handle))
+                    await ctx.send(f"Sorry, user with handle {handle} could not be found.")
                     return
 
                 # Reading the data as JSON data and storing the dictionary in data variable
@@ -38,8 +38,7 @@ class User(commands.Cog):
 
                 # Creating an embed
                 Embed = discord.Embed(title=data["result"][0]["handle"],
-                                      url="https://codeforces.com/profile/{}".format(
-                                          data["result"][0]["handle"]),
+                                      url=f"https://codeforces.com/profile/{data['result'][0]['handle']}",
                                       color=color)
 
                 Embed.set_thumbnail(url=data["result"][0]["avatar"])
