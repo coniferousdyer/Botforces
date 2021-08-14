@@ -80,6 +80,10 @@ class Problem(commands.Cog):
                 # Sending embed
                 await ctx.send(embed=Embed)
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("-Problem ready!")
+
 
 def setup(client):
     client.add_cog(Problem(client))

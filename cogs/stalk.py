@@ -46,6 +46,10 @@ class Stalk(commands.Cog):
                 # Sending the embed
                 await ctx.send(embed=Embed)
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("-Stalk ready!")
+
 
 def setup(client):
     client.add_cog(Stalk(client))

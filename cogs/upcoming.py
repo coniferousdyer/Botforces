@@ -65,6 +65,10 @@ class Upcoming(commands.Cog):
                 # Sending embed
                 await ctx.send(embed=Embed)
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("-Upcoming ready!")
+
 
 def setup(client):
     client.add_cog(Upcoming(client))

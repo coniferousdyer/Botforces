@@ -63,6 +63,10 @@ class User(commands.Cog):
                 # Sending the embed
                 await ctx.send(embed=Embed)
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print("-User ready!")
+
 
 def setup(client):
     client.add_cog(User(client))
