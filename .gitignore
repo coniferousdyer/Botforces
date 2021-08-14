@@ -1,2 +1,4 @@
 bot_env
 token.json
+__pycache__
+*.pyc

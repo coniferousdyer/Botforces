@@ -1,9 +1,5 @@
 import discord
 import json
-import aiohttp
-import random
-import datetime
-import time
 from discord.ext import commands
 
 client = commands.Bot(command_prefix='-')
