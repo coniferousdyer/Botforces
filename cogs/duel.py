@@ -2,6 +2,7 @@ import discord
 import aiohttp
 import asyncio
 import random
+import datetime
 from discord.ext import commands
 
 
@@ -90,15 +91,53 @@ class Duel(commands.Cog):
                     # Sending embed
                     await ctx.send(embed=Embed)
 
+                    # Storing the start time of the duel
+                    startTime = datetime.datetime.now()
+
                     # Deleting problem list
                     del data
 
                     # Waiting for the duel to end
                     def check_2(m):
-                        return m.content == "endduel" and m.channel == reactMsg.channel
+                        return m.content == "endduel" and m.channel == reactMsg.channel and (m.author == user or m.author == ctx.message.author)
 
                     msg = await self.client.wait_for('message', check=check_2)
-                    ######################## TO BE DONE
+
+                    # Obtaining and comparing the last submissions of the two users ###### TO BE CHANGED
+                    async with session.get(f'https://codeforces.com/api/user.status?handle={}&from=1&count=1') as r1:
+                        async with session.get(f'https://codeforces.com/api/user.status?handle={}&from=1&count=1') as r2:
+
+                            # Saving the last submission in JSON form
+                            data_1 = await r1.json()
+                            data_2 = await r2.json()
+
+                            # Boolean variables to check whether both users solved the problem
+                            match_1 = False
+                            match_2 = False
+
+                            if problem["contestId"] == data_1["result"][0]["problem"]["contestId"] and problem["index"] == data_1["result"][0]["problem"]["index"] and data_1["result"][0]["verdict"] == "OK":
+                                match_1 = True
+                            if problem["contestId"] == data_2["result"][0]["problem"]["contestId"] and problem["index"] == data_2["result"][0]["problem"]["index"] and data_2["result"][0]["verdict"] == "OK":
+                                match_2 = True
+
+                            # If both users solved the problem
+                            if match_1 and match_2:
+                                if data_1["result"][0]["creationTimeSeconds"] <= data_2["result"][0]["creationTimeSeconds"]:
+                                    await ctx.send(f"<@{ctx.message.author.id}> has won the duel against <@{user.id}>!")
+                                else:
+                                    await ctx.send(f"<@{user.id}> has won the duel against <@{ctx.message.author.id}>!")
+
+                            # If only user_1 solved the problem
+                            elif match_1:
+                                await ctx.send(f"<@{ctx.message.author.id}> has won the duel against <@{user.id}>!")
+
+                            # If only user_2 solved the problem
+                            elif match_2:
+                                await ctx.send(f"<@{user.id}> has won the duel against <@{ctx.message.author.id}>!")
+
+                            # If neither solved the problem
+                            else:
+                                await ctx.send("Duel ended, neither won!")
 
     @commands.Cog.listener()
     async def on_ready(self):
