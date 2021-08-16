@@ -9,7 +9,7 @@ with open("token.json") as f:
     TOKEN = json.load(f)
     TOKEN = TOKEN["token"]
 
-cogs = ['cogs.user', 'cogs.stalk', 'cogs.problem', 'cogs.upcoming']
+cogs = ['cogs.user', 'cogs.stalk', 'cogs.problem', 'cogs.upcoming', 'cogs.duel']
 
 for cog in cogs:
     try:
