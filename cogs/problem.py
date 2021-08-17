@@ -1,5 +1,5 @@
 import discord
-import aiohttp
+import csv
 import random
 from discord.ext import commands
 
@@ -11,73 +11,66 @@ class Problem(commands.Cog):
     # Command to suggest a random problem, with optional tags and rating
     @commands.command()
     async def problem(self, ctx, *args):
-        async with aiohttp.ClientSession() as session:
 
-            # Saving the URL as a string
-            url = 'https://codeforces.com/api/problemset.problems'
-            rating = 0
-            check = False
+        # Opening problems.csv and reading the data into a list
+        with open('problems.csv') as csvFile:
+            problemList = list(csv.reader(csvFile))
 
-            # Separating the rating and the tags
-            for arg in args:
-                if arg.isdigit():
-                    rating = int(arg)
-                else:
-                    if not check:
-                        url += f'?tags={arg}'
-                        check = True
-                    else:
-                        url += f';{arg}'
+        # Initialising rating to 0 and tags to empty list
+        rating = 0
+        tags = []
 
-            async with session.get(url) as r:
+        # Separating the rating and the tags
+        for arg in args:
+            if arg.isdigit():
+                rating = int(arg)
+            else:
+                tags.append(arg)
 
-                # If URL was not found
-                if not r.ok:
-                    await ctx.send("Sorry, an error occurred.")
-                    return
+        # If rating was given, i.e. rating != 0, then filter the list
+        if rating != 0:
+            problemList = list(filter(
+                lambda p: p[4] == f"{rating}", problemList))
 
-                # Reading the data as JSON data and storing the dictionary in data variable
-                data = await r.json()
+        ################################### FILE TO FOLDER AND BUILT IN FUNCTION USAGE
 
-                # Filtering out the problems without rating
-                data["result"]["problems"] = filter(
-                    lambda p: 'rating' in p, data["result"]["problems"])
+        for problem in problemList:
+            problem[3] = problem[3].strip("[]").split(", ")
+            problem[3] = list(map(lambda x: x.strip("'"), problem[3]))
 
-                # If rating was given, i.e. rating != 0, then filter the list
-                if rating != 0:
-                    data["result"]["problems"] = filter(
-                        lambda p: p["rating"] == rating, data["result"]["problems"])
+        ###################################
 
-                data["result"]["problems"] = list(data["result"]["problems"])
+        # If tags were given, i.e. tags is not empty, filter the list
+        if tags != []:
+            problemList = list(filter(lambda p: all(x in p[3] for x in tags), problemList))
 
-                # In case no problems are found
-                if len(data["result"]["problems"]) == 0:
-                    await ctx.send("Sorry, no problems could be found. Please try again.")
-                    return
+        # In case no problems are found
+        if len(problemList) == 0:
+            await ctx.send("Sorry, no problems could be found. Please try again.")
+            return
 
-                # Storing problem
-                problem = data["result"]["problems"][random.randint(
-                    0, len(data["result"]["problems"]) - 1)]
+        # Storing problem
+        problem = problemList[random.randint(0, len(problemList) - 1)]
 
-                # Creating an embed
-                Embed = discord.Embed(title=f"{problem['contestId']}{problem['index']}. {problem['name']}",
-                                      url=f"https://codeforces.com/problemset/problem/{problem['contestId']}/{problem['index']}",
-                                      color=0xff0000)
+        # Creating an embed
+        Embed = discord.Embed(title=f"{problem[0]}{problem[1]}. {problem[2]}",
+                              url=f"https://codeforces.com/problemset/problem/{problem[0]}/{problem[1]}",
+                              color=0xff0000)
 
-                Embed.add_field(
-                    name="Rating", value=problem["rating"], inline=False)
+        Embed.add_field(
+            name="Rating", value=problem[4], inline=False)
 
-                # Formatting the strings in the list and joining them to form a string
-                problem["tags"] = map(
-                    lambda str: '||' + str + '||', problem["tags"])
-                tags = ','.join(problem["tags"])
-                Embed.add_field(name="Tags", value=tags)
+        # Formatting the strings in the list and joining them to form a string
+        problem[3] = map(
+            lambda str: '||' + str + '||', problem[3])
+        tags = ','.join(problem[3])
+        Embed.add_field(name="Tags", value=tags)
 
-                Embed.set_footer(icon_url=ctx.author.avatar_url,
-                                 text=str(ctx.author))
+        Embed.set_footer(icon_url=ctx.author.avatar_url,
+                         text=str(ctx.author))
 
-                # Sending embed
-                await ctx.send(embed=Embed)
+        # Sending embed
+        await ctx.send(embed=Embed)
 
     @commands.Cog.listener()
     async def on_ready(self):
