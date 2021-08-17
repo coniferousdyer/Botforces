@@ -43,101 +43,116 @@ class Duel(commands.Cog):
                 await ctx.send("Sorry, the duel expired because 30 seconds were up!")
                 return
             else:
-                await ctx.send(f"<@{usr.id}> has accepted the duel! Finding problem...")
+                await ctx.send(f"<@{usr.id}> has accepted the duel! Send handles of <@{ctx.message.author.id}> and <@{usr.id}> respectively like this within the next 60 seconds:\n```handles <handle of {ctx.author.display_name}> <handle of {usr.display_name}>```")
 
-                # Finding problem
-                async with session.get('https://codeforces.com/api/problemset.problems') as r:
-
-                    # If URL was not found
-                    if not r.ok:
-                        await ctx.send("Sorry, an error occurred.")
-                        return
-
-                    # Reading the data as JSON data and storing the dictionary in data variable
-                    data = await r.json()
-
-                    # Filtering out the problems without rating
-                    data["result"]["problems"] = filter(
-                        lambda p: 'rating' in p, data["result"]["problems"])
-
-                    # Filter the list to get problems of given rating
-                    data["result"]["problems"] = filter(
-                        lambda p: p["rating"] == rating, data["result"]["problems"])
-
-                    data["result"]["problems"] = list(
-                        data["result"]["problems"])
-
-                    # In case no problems are found
-                    if len(data["result"]["problems"]) == 0:
-                        await ctx.send("Sorry, no problems could be found. Please try again.")
-                        return
-
-                    # Storing problem
-                    problem = data["result"]["problems"][random.randint(
-                        0, len(data["result"]["problems"]) - 1)]
-
-                    # Creating an embed
-                    Embed = discord.Embed(title=f"{problem['contestId']}{problem['index']}. {problem['name']}",
-                                          url=f"https://codeforces.com/problemset/problem/{problem['contestId']}/{problem['index']},",
-                                          description="The duel starts now!",
-                                          color=0xff0000)
-
-                    Embed.add_field(
-                        name="Rating", value=problem["rating"], inline=False)
-
-                    Embed.add_field(
-                        name="Duel", value=f"{ctx.author.display_name} vs {usr.display_name}")
-
-                    # Sending embed
-                    await ctx.send(embed=Embed)
-
-                    # Storing the start time of the duel
-                    startTime = datetime.datetime.now()
-
-                    # Deleting problem list
-                    del data
-
-                    # Waiting for the duel to end
-                    def check_2(m):
-                        return m.content == "endduel" and m.channel == reactMsg.channel and (m.author == user or m.author == ctx.message.author)
-
+                def check_2(m):
+                    return m.content.startswith("handles") and m.channel == reactMsg.channel and (m.author == user or m.author == ctx.message.author) and len(m.content.split()) == 3
+                try:
                     msg = await self.client.wait_for('message', check=check_2)
+                except:
+                    await ctx.send("Sorry, the duel expired because 60 seconds were up!")
+                    return
+                else:
+                    await ctx.send("Starting duel...")
+                    handles = msg.content.split()
 
-                    # Obtaining and comparing the last submissions of the two users ###### TO BE CHANGED
-                    async with session.get(f'https://codeforces.com/api/user.status?handle={}&from=1&count=1') as r1:
-                        async with session.get(f'https://codeforces.com/api/user.status?handle={}&from=1&count=1') as r2:
+                    # Finding problem
+                    async with session.get('https://codeforces.com/api/problemset.problems') as r:
 
-                            # Saving the last submission in JSON form
-                            data_1 = await r1.json()
-                            data_2 = await r2.json()
+                        # If URL was not found
+                        if not r.ok:
+                            await ctx.send("Sorry, an error occurred.")
+                            return
 
-                            # Boolean variables to check whether both users solved the problem
-                            match_1 = False
-                            match_2 = False
+                        # Reading the data as JSON data and storing the dictionary in data variable
+                        data = await r.json()
 
-                            if problem["contestId"] == data_1["result"][0]["problem"]["contestId"] and problem["index"] == data_1["result"][0]["problem"]["index"] and data_1["result"][0]["verdict"] == "OK":
-                                match_1 = True
-                            if problem["contestId"] == data_2["result"][0]["problem"]["contestId"] and problem["index"] == data_2["result"][0]["problem"]["index"] and data_2["result"][0]["verdict"] == "OK":
-                                match_2 = True
+                        # Filtering out the problems without rating
+                        data["result"]["problems"] = filter(
+                            lambda p: 'rating' in p, data["result"]["problems"])
 
-                            # If both users solved the problem
-                            if match_1 and match_2:
-                                if data_1["result"][0]["creationTimeSeconds"] <= data_2["result"][0]["creationTimeSeconds"]:
+                        # Filter the list to get problems of given rating
+                        data["result"]["problems"] = filter(
+                            lambda p: p["rating"] == rating, data["result"]["problems"])
+
+                        data["result"]["problems"] = list(
+                            data["result"]["problems"])
+
+                        # In case no problems are found
+                        if len(data["result"]["problems"]) == 0:
+                            await ctx.send("Sorry, no problems could be found. Please try again.")
+                            return
+
+                        # Storing problem
+                        problem = data["result"]["problems"][random.randint(
+                            0, len(data["result"]["problems"]) - 1)]
+
+                        # Creating an embed
+                        Embed = discord.Embed(title=f"{problem['contestId']}{problem['index']}. {problem['name']}",
+                                              url=f"https://codeforces.com/problemset/problem/{problem['contestId']}/{problem['index']},",
+                                              description="The duel starts now!",
+                                              color=0xff0000)
+
+                        Embed.add_field(
+                            name="Rating", value=problem["rating"], inline=False)
+
+                        Embed.add_field(
+                            name="Duel", value=f"{ctx.author.display_name} vs {usr.display_name}")
+
+                        # Sending embed
+                        await ctx.send(embed=Embed)
+
+                        # Storing the start time of the duel
+                        startTime = datetime.datetime.now()
+
+                        # Deleting problem list
+                        del data
+
+                        # Waiting for the duel to end
+                        def check_3(m):
+                            return m.content == "endduel" and m.channel == reactMsg.channel and (m.author == user or m.author == ctx.message.author)
+
+                        msg = await self.client.wait_for('message', check=check_3)
+
+                        # Obtaining and comparing the last submissions of the two users
+                        async with session.get(f'https://codeforces.com/api/user.status?handle={handles[1]}&from=1&count=1') as r1:
+                            async with session.get(f'https://codeforces.com/api/user.status?handle={handles[2]}&from=1&count=1') as r2:
+
+                                # Saving the last submission in JSON form
+                                data_1 = await r1.json()
+                                data_2 = await r2.json()
+
+                                # Boolean variables to check whether both users solved the problem
+                                match_1 = False
+                                match_2 = False
+
+                                # Converting the timestamps to datetime objects
+                                data_1["result"][0]["creationTimeSeconds"] = datetime.datetime.fromtimestamp(data_1["result"][0]["creationTimeSeconds"])
+                                data_2["result"][0]["creationTimeSeconds"] = datetime.datetime.fromtimestamp(data_2["result"][0]["creationTimeSeconds"])
+
+                                if problem["contestId"] == data_1["result"][0]["problem"]["contestId"] and data_1["result"][0]["creationTimeSeconds"] > startTime and problem["index"] == data_1["result"][0]["problem"]["index"] and data_1["result"][0]["verdict"] == "OK":
+                                    match_1 = True
+                                if problem["contestId"] == data_2["result"][0]["problem"]["contestId"] and data_2["result"][0]["creationTimeSeconds"] > startTime and problem["index"] == data_2["result"][0]["problem"]["index"] and data_2["result"][0]["verdict"] == "OK":
+                                    match_2 = True
+
+                                # If both users solved the problem
+                                if match_1 and match_2:
+                                    if data_1["result"][0]["creationTimeSeconds"] <= data_2["result"][0]["creationTimeSeconds"]:
+                                        await ctx.send(f"<@{ctx.message.author.id}> has won the duel against <@{user.id}>!")
+                                    else:
+                                        await ctx.send(f"<@{user.id}> has won the duel against <@{ctx.message.author.id}>!")
+
+                                # If only user_1 solved the problem
+                                elif match_1:
                                     await ctx.send(f"<@{ctx.message.author.id}> has won the duel against <@{user.id}>!")
-                                else:
+
+                                # If only user_2 solved the problem
+                                elif match_2:
                                     await ctx.send(f"<@{user.id}> has won the duel against <@{ctx.message.author.id}>!")
 
-                            # If only user_1 solved the problem
-                            elif match_1:
-                                await ctx.send(f"<@{ctx.message.author.id}> has won the duel against <@{user.id}>!")
-
-                            # If only user_2 solved the problem
-                            elif match_2:
-                                await ctx.send(f"<@{user.id}> has won the duel against <@{ctx.message.author.id}>!")
-
-                            # If neither solved the problem
-                            else:
-                                await ctx.send("Duel ended, neither won!")
+                                # If neither solved the problem
+                                else:
+                                    await ctx.send("Duel ended, neither won!")
 
     @commands.Cog.listener()
     async def on_ready(self):
