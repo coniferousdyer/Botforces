@@ -89,7 +89,7 @@ class Duel(commands.Cog):
 
                         # Creating an embed
                         Embed = discord.Embed(title=f"{problem['contestId']}{problem['index']}. {problem['name']}",
-                                              url=f"https://codeforces.com/problemset/problem/{problem['contestId']}/{problem['index']},",
+                                              url=f"https://codeforces.com/problemset/problem/{problem['contestId']}/{problem['index']}",
                                               description="The duel starts now!",
                                               color=0xff0000)
 
