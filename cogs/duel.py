@@ -49,7 +49,7 @@ class Duel(commands.Cog):
                 def check_2(m):
                     return m.content.startswith("handles") and m.channel == reactMsg.channel and (m.author == user or m.author == ctx.message.author) and len(m.content.split()) == 3
                 try:
-                    msg = await self.client.wait_for('message', check=check_2)
+                    msg = await self.client.wait_for('message', timeout=60.0, check=check_2)
                 except:
                     await ctx.send("Sorry, the duel expired because 60 seconds were up!")
                     return
