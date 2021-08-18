@@ -32,17 +32,14 @@ class Problem(commands.Cog):
             problemList = list(filter(
                 lambda p: p[4] == f"{rating}", problemList))
 
-        ################################### FILE TO FOLDER AND BUILT IN FUNCTION USAGE
-
         for problem in problemList:
             problem[3] = problem[3].strip("[]").split(", ")
             problem[3] = list(map(lambda x: x.strip("'"), problem[3]))
 
-        ###################################
-
         # If tags were given, i.e. tags is not empty, filter the list
         if tags != []:
-            problemList = list(filter(lambda p: all(x in p[3] for x in tags), problemList))
+            problemList = list(filter(lambda p: all(
+                x in p[3] for x in tags), problemList))
 
         # In case no problems are found
         if len(problemList) == 0:
