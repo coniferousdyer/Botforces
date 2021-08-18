@@ -57,8 +57,6 @@ class Duel(commands.Cog):
                     await ctx.send("Starting duel...")
                     handles = msg.content.split()
 
-                #######################################################
-
                 # Opening problems.csv and reading the data into a list
                 with open('problems.csv') as csvFile:
                     problemList = list(csv.reader(csvFile))
@@ -78,8 +76,6 @@ class Duel(commands.Cog):
 
                 # Storing problem
                 problem = problemList[random.randint(0, len(problemList) - 1)]
-
-                #########################################################
 
                 # Creating an embed
                 Embed = discord.Embed(title=f"{problem[0]}{problem[1]}. {problem[2]}",
