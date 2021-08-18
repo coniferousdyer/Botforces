@@ -7,12 +7,11 @@ class Stalk(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    # ERROR HANDLING TO BE DONE - ALL ACS ONLY + PROBLEMS WITH NO RATINGS
-    # Command to display the last n submissions of a user
+    # Command to display the last n ACs of a user
     @ commands.command()
     async def stalk(self, ctx, handle, number=10):
         async with aiohttp.ClientSession() as session:
-            async with session.get(f'https://codeforces.com/api/user.status?handle={handle}&count={number}') as r:
+            async with session.get(f'https://codeforces.com/api/user.status?handle={handle}') as r:
 
                 # If user was not found
                 if not r.ok:
@@ -26,15 +25,25 @@ class Stalk(commands.Cog):
                 submissions = ''
                 count = 1
                 for problem in data["result"]:
-                    if count == number:
-                        submissions += f"{count}. {problem['problem']['name']} - {problem['problem']['rating']} ({problem['verdict']})"
-                    else:
-                        submissions += f"{count}. {problem['problem']['name']} - {problem['problem']['rating']} ({problem['verdict']})\n"
-                    count += 1
+                    if problem['verdict'] == "OK":
+                        if 'rating' in problem['problem']:
+                            if count == number:
+                                submissions += f"{count}. [{problem['problem']['name']}](https://codeforces.com/problemset/problem/{problem['problem']['contestId']}/{problem['problem']['index']}) - {problem['problem']['rating']}"
+                                break
+                            else:
+                                submissions += f"{count}. [{problem['problem']['name']}](https://codeforces.com/problemset/problem/{problem['problem']['contestId']}/{problem['problem']['index']}) - {problem['problem']['rating']}\n"
+                            count += 1
+                        else:
+                            if count == number:
+                                submissions += f"{count}. [{problem['problem']['name']}](https://codeforces.com/problemset/problem/{problem['problem']['contestId']}/{problem['problem']['index']}) - ?"
+                                break
+                            else:
+                                submissions += f"{count}. [{problem['problem']['name']}](https://codeforces.com/problemset/problem/{problem['problem']['contestId']}/{problem['problem']['index']}) - ?\n"
+                            count += 1
 
                 # Creating an embed
                 Embed = discord.Embed(
-                    title=f"Last {number} submissions of {handle}",
+                    title=f"Last {number} solved by {handle}",
                     description=submissions,
                     color=0xff0000)
 
