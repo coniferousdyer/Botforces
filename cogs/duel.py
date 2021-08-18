@@ -58,7 +58,7 @@ class Duel(commands.Cog):
                     handles = msg.content.split()
 
                 # Opening problems.csv and reading the data into a list
-                with open('problems.csv') as csvFile:
+                with open('data/problems.csv') as csvFile:
                     problemList = list(csv.reader(csvFile))
 
                 # Filtering out problems of given rating

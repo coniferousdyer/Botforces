@@ -14,7 +14,7 @@ class Problem(commands.Cog):
     async def problem(self, ctx, *args):
 
         # Opening problems.csv and reading the data into a list
-        with open('problems.csv') as csvFile:
+        with open('data/problems.csv') as csvFile:
             problemList = list(csv.reader(csvFile))
 
         # Initialising rating to 0 and tags to empty list
@@ -81,7 +81,7 @@ class Problem(commands.Cog):
                 data["result"]["problems"] = filter(
                     lambda p: 'rating' in p, data["result"]["problems"])
 
-                with open('problems.csv', 'w') as csvFile:
+                with open('data/problems.csv', 'w') as csvFile:
                     csvWriter = csv.writer(csvFile, delimiter=',')
                     for p in data["result"]["problems"]:
                         p['tags']
