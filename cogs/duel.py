@@ -27,9 +27,9 @@ class Duel(commands.Cog):
                 return
 
             # Checking if the user mentioned themselves
-            # if usr == ctx.author:
-            #     await ctx.send("You can't duel yourself.")
-            #     return
+            if usr == ctx.author:
+                await ctx.send("You can't duel yourself.")
+                return
 
             reactMsg = await ctx.send(f"<@{usr.id}>, react to this message with :thumbsup: within 30 seconds to accept the duel.")
 
