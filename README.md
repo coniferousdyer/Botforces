@@ -6,7 +6,8 @@ This is a Discord bot which provides certain basic functionalities helpful to Co
 
 |Command|Syntax|Description|
 |-------|------|-----------|
-|help|`-help`|Displays all the available commands, along with descriptions of what they do.|
+|help|`-help`|Displays all the available commands.|
+||`-help <command>`|Displays what the command does, as well as its syntax.
 user|`-user <handle>`|Displays information about the Codeforces user with the requested handle.
 |upcoming|`-upcoming`|Displays the upcoming Codeforces contests, along with the date, time and duration.
 |problem|`-problem`|Displays a random problem.
