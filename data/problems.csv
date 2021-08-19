@@ -1,3 +1,16 @@
+1560,F2,Nearest Beautiful Number (hard version),"['bitmasks', 'brute force', 'constructive algorithms', 'dp', 'greedy']",2100
+1560,F1,Nearest Beautiful Number (easy version),"['bitmasks', 'brute force', 'constructive algorithms', 'greedy', 'implementation']",1900
+1560,E,Polycarp and String Transformation,"['binary search', 'implementation', 'sortings', 'strings']",1800
+1560,D,Make a Power of Two,"['greedy', 'math', 'strings']",1300
+1560,C,Infinity Table,"['implementation', 'math']",800
+1560,B,Who's Opposite?,['math'],800
+1560,A,Dislike of Threes,['implementation'],800
+1559,E,Mocha and Stars,"['combinatorics', 'dp', 'fft', 'math', 'number theory']",2200
+1559,D2,Mocha and Diana (Hard Version),"['brute force', 'constructive algorithms', 'data structures', 'dfs and similar', 'dsu', 'graphs', 'greedy', 'trees', 'two pointers']",2500
+1559,D1,Mocha and Diana (Easy Version),"['brute force', 'constructive algorithms', 'dsu', 'graphs', 'greedy', 'trees']",1400
+1559,C,Mocha and Hiking,"['constructive algorithms', 'graphs']",1200
+1559,B,Mocha and Red and Blue,"['dp', 'greedy']",900
+1559,A,Mocha and Math,"['bitmasks', 'constructive algorithms', 'math']",900
 1557,E,Assiut Chess,"['brute force', 'constructive algorithms', 'interactive']",2800
 1557,D,Ezzat and Grid,"['data structures', 'dp', 'greedy']",2200
 1557,C,Moamen and XOR,"['bitmasks', 'combinatorics', 'dp', 'math', 'matrices']",1700
@@ -46,6 +59,8 @@
 1550,C,Manhattan Subarrays,"['brute force', 'geometry', 'greedy', 'implementation']",1700
 1550,B,Maximum Cost Deletion,"['greedy', 'math']",1000
 1550,A,Find The Array,"['greedy', 'math']",800
+1549,B,Gregor and the Pawn Game,"['dfs and similar', 'dp', 'flows', 'graph matchings', 'graphs', 'greedy', 'implementation']",800
+1549,A,Gregor and Cryptography,"['math', 'number theory']",800
 1548,E,Gregor and the Two Painters,"['data structures', 'divide and conquer', 'graphs', 'greedy', 'math']",3400
 1548,D2,Gregor and the Odd Cows (Hard),"['brute force', 'geometry', 'math', 'number theory']",3300
 1548,D1,Gregor and the Odd Cows (Easy),"['bitmasks', 'geometry', 'math', 'number theory']",2300

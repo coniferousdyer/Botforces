@@ -15,7 +15,7 @@ class Upcoming(commands.Cog):
     async def upcoming(self, ctx):
         async with aiohttp.ClientSession() as session:
 
-            with open("data/results.csv") as csvFile:
+            with open("data/contests.csv") as csvFile:
                 contestList = list(csv.reader(csvFile))
 
             # Reversing the contest list
@@ -66,7 +66,7 @@ class Upcoming(commands.Cog):
                 data = await r.json()
 
                 # Storing the upcoming contests in contests.csv
-                with open("data/results.csv", "w") as csvFile:
+                with open("data/contests.csv", "w") as csvFile:
                     csvWriter = csv.writer(csvFile, delimiter=",")
                     for c in data['result']:
                         if c['phase'] == "BEFORE":
