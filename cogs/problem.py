@@ -72,22 +72,6 @@ class Problem(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-
-        async with aiohttp.ClientSession() as session:
-            async with session.get('https://codeforces.com/api/problemset.problems') as r:
-
-                # Reading the contests list as JSON data
-                data = await r.json()
-                data["result"]["problems"] = filter(
-                    lambda p: 'rating' in p, data["result"]["problems"])
-
-                with open('data/problems.csv', 'w') as csvFile:
-                    csvWriter = csv.writer(csvFile, delimiter=',')
-                    for p in data["result"]["problems"]:
-                        p['tags']
-                        csvWriter.writerow([p['contestId'], p['index'],
-                                            p['name'], p['tags'], p['rating']])
-
         print("-Problem ready!")
 
 

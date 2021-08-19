@@ -1,5 +1,5 @@
-1560,F2,Nearest Beautiful Number (hard version),"['bitmasks', 'brute force', 'constructive algorithms', 'dp', 'greedy']",2100
-1560,F1,Nearest Beautiful Number (easy version),"['bitmasks', 'brute force', 'constructive algorithms', 'greedy', 'implementation']",1900
+1560,F2,Nearest Beautiful Number (hard version),"['brute force', 'constructive algorithms', 'dfs and similar', 'dp', 'greedy']",2100
+1560,F1,Nearest Beautiful Number (easy version),"['brute force', 'constructive algorithms', 'dfs and similar', 'greedy', 'implementation']",1900
 1560,E,Polycarp and String Transformation,"['binary search', 'implementation', 'sortings', 'strings']",1800
 1560,D,Make a Power of Two,"['greedy', 'math', 'strings']",1300
 1560,C,Infinity Table,"['implementation', 'math']",800

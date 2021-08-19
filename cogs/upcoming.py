@@ -59,22 +59,6 @@ class Upcoming(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        async with aiohttp.ClientSession() as session:
-            async with session.get('https://codeforces.com/api/contest.list') as r:
-
-                # Reading the contests list as JSON data
-                data = await r.json()
-
-                # Storing the upcoming contests in contests.csv
-                with open("data/contests.csv", "w") as csvFile:
-                    csvWriter = csv.writer(csvFile, delimiter=",")
-                    for c in data['result']:
-                        if c['phase'] == "BEFORE":
-                            csvWriter.writerow(
-                                [c['id'], c['name'], c['durationSeconds'], c['startTimeSeconds']])
-                        else:
-                            break
-
         print("-Upcoming ready!")
 
 
