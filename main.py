@@ -6,13 +6,13 @@ from discord.ext import tasks, commands
 from discord.ext.commands import bot
 from dotenv import load_dotenv
 
-client = commands.Bot(command_prefix='-')
+client = commands.Bot(command_prefix='-', help_command=None)
 
 load_dotenv()
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-cogs = ['cogs.user', 'cogs.stalk',
+cogs = ['cogs.help', 'cogs.user', 'cogs.stalk',
         'cogs.problem', 'cogs.upcoming', 'cogs.duel']
 
 for cog in cogs:
