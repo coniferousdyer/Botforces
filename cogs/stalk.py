@@ -9,7 +9,12 @@ class Stalk(commands.Cog):
 
     # Command to display the last n ACs of a user
     @ commands.command()
-    async def stalk(self, ctx, handle, number=10):
+    async def stalk(self, ctx, handle=None, number=10):
+
+        if handle == None:
+            await ctx.send("Please provide a handle.")
+            return
+            
         async with aiohttp.ClientSession() as session:
             async with session.get(f'https://codeforces.com/api/user.status?handle={handle}') as r:
 
@@ -17,6 +22,8 @@ class Stalk(commands.Cog):
                 if not r.ok:
                     await ctx.send(f"Sorry, user with handle {handle} could not be found.")
                     return
+
+                await ctx.send("Processing request...")
 
                 # Reading the data as JSON data and storing the dictionary in data variable
                 data = await r.json()

@@ -15,5 +15,8 @@ user|`-user <handle>`|Displays information about the Codeforces user with the re
 ||`-problem <tags>`|Displays a random problem having the requested tags (can include multiple tags, tags with more than one word must be enclosed in double quotes, for eg. "binary search")
 ||`-problem <rating> <tags>`|Displays a random problem of that rating and having the requested tags. The order does not matter.
 |stalk|`-stalk <username> <n>`|Displays the last n problems solved by the user.
+|plotrating|`-plotrating <handle>`|Plots the problems done by a user, grouped by rating.
+|plotindex|`-plotindex <handle>`|Plots the problems done by a user, grouped by index.
+|plottags|`-plottags <handle>`|Plots the problems done by a user, grouped by tags.
 |duel|`-duel <user_mention> <rating>`|Challenges the mentioned user to a duel over a problem of the provided rating.
 |endduel (only if a duel is in progress)|`endduel`|If sent by one of the users in a duel, ends the duel and checks the result to see who won. 

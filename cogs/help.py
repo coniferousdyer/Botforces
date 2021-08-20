@@ -27,6 +27,12 @@ class Help(commands.Cog):
                 name="upcoming", value="Displays the list of upcoming Codeforces contests.", inline=False)
             Embed.add_field(
                 name="duel", value="Challenges another user to a duel over a problem.", inline=False)
+            Embed.add_field(
+                name="plotrating", value="Plots the problems done by a user, grouped by rating.", inline=False)
+            Embed.add_field(
+                name="plotindex", value="Plots the problems done by a user, grouped by contest index.", inline=False)
+            Embed.add_field(
+                name="plottags", value="Plots the problems done by a user, grouped by tags.", inline=False)
 
             Embed.set_footer(icon_url=ctx.author.avatar_url,
                              text=str(ctx.author))
@@ -97,6 +103,48 @@ class Help(commands.Cog):
 
             Embed.add_field(
                 name="Syntax", value="`-duel @<discord_user>` - To challenge a user\n`endduel` - To end a duel and decide the result (only if a duel is in progress).", inline=False)
+
+            Embed.set_footer(icon_url=ctx.author.avatar_url,
+                             text=str(ctx.author))
+
+            # Sending the embed
+            await ctx.send(embed=Embed)
+
+        elif cmd == "plotrating":
+            Embed = discord.Embed(title="plotrating",
+                                  description="Plots the problems done by a user, grouped by rating.",
+                                  color=0xff0000)
+
+            Embed.add_field(
+                name="Syntax", value="`-plotrating <codeforces_handle>`", inline=False)
+
+            Embed.set_footer(icon_url=ctx.author.avatar_url,
+                             text=str(ctx.author))
+
+            # Sending the embed
+            await ctx.send(embed=Embed)
+
+        elif cmd == "plotindex":
+            Embed = discord.Embed(title="plotindex",
+                                  description="Plots the problems done by a user, grouped by contest index.",
+                                  color=0xff0000)
+
+            Embed.add_field(
+                name="Syntax", value="`-plotindex <codeforces_handle>`", inline=False)
+
+            Embed.set_footer(icon_url=ctx.author.avatar_url,
+                             text=str(ctx.author))
+
+            # Sending the embed
+            await ctx.send(embed=Embed)
+
+        elif cmd == "plottags":
+            Embed = discord.Embed(title="plottags",
+                                  description="Plots the problems done by a user, grouped by tags.",
+                                  color=0xff0000)
+
+            Embed.add_field(
+                name="Syntax", value="`-plottags <codeforces_handle>`", inline=False)
 
             Embed.set_footer(icon_url=ctx.author.avatar_url,
                              text=str(ctx.author))
