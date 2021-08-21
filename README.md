@@ -1,6 +1,6 @@
 # Codeforces Bot
 
-This is a Discord bot which provides certain basic functionalities helpful to Codeforces users. It interacts with the Codeforces API to obtain the data and uses it to carry out the command requested.
+This is a Discord bot, written in Python, which provides certain basic functionalities helpful to Codeforces users. It interacts with the Codeforces API to obtain the data and uses it to carry out the command requested.
 
 ## Commands
 
