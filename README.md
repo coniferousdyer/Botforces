@@ -20,3 +20,72 @@ user|`-user <handle>`|Displays information about the Codeforces user with the re
 |plottags|`-plottags <handle>`|Plots the problems done by a user, grouped by tags.
 |duel|`-duel <user_mention> <rating>`|Challenges the mentioned user to a duel over a problem of the provided rating.
 |endduel (only if a duel is in progress)|`endduel`|If sent by one of the users in a duel, ends the duel and checks the result to see who won. 
+
+## Setup
+
+### I. Getting your token
+
+Follow the steps <a href="https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token">here</a> to obtain your token and add the bot to the server. You will need it in order to run your bot successfully.
+
+### II. Setting things up on your system
+
+1. Open up your terminal and clone the repository.
+
+```bash
+$ git clone https://github.com/coniferousdyer/Codeforces-Bot.git
+```
+
+2. Go to the directory you cloned and create a virtual environment.
+
+```bash
+$ cd Codeforces-Bot
+
+# Give the virtual environment a name of your choice
+python3 -m venv <name_of_virtual_environment>
+```
+
+3. Activate the virtual environment (on MacOS/Linux).
+
+```bash
+$ source <name_of_virtual_environment>/bin/activate
+```
+
+4. Install the required modules within your virtual environment.
+
+```bash
+$ pip install -r requirements.txt
+```
+
+5. Create a file in the directory and name it `.env`. Take the token you copied earlier in and paste it in place of `PASTE_TOKEN_HERE`. Then paste the following line in the `.env` file.
+
+```bash
+DISCORD_TOKEN=PASTE_TOKEN_HERE
+```
+
+You now have everything set up to run the bot.
+
+<b>NOTE:</b> In order to deactivate your virtual environment,
+
+```bash
+$ deactivate
+```
+
+### III. Running the bot
+
+In order to run your bot, you simply have to do this:
+
+```bash
+$ python3 main.py
+```
+
+You're all set! The bot should be online now. 
+
+Keep in mind though, that if you close the terminal, the program will terminate and the bot will go offline.
+
+## Future Plans
+
+* Lockout Matches
+
+
+
+
