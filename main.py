@@ -3,7 +3,6 @@ import os
 import aiohttp
 import csv
 from discord.ext import tasks, commands
-from discord.ext.commands import bot
 from dotenv import load_dotenv
 
 client = commands.Bot(command_prefix='-', help_command=None)
