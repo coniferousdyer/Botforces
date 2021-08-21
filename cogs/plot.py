@@ -41,7 +41,7 @@ class Plot(commands.Cog):
                             pDict[problem["problem"]["name"]
                                   ] = problem["problem"]["rating"]
                         else:
-                            pDict[problem["problem"]["name"]] = "0"
+                            pDict[problem["problem"]["name"]] = "?"
 
                 resDict = dict({})
 
@@ -71,7 +71,7 @@ class Plot(commands.Cog):
                 # Creating an embed
                 Embed = discord.Embed(
                     title=f"{handle}'s solved problems",
-                    description="Note: Rating 0 refers to problems that do not have a rating on Codeforces.",
+                    description="Note: ? refers to problems that do not have a rating on Codeforces.",
                     color=0xff0000)
                 Embed.set_image(url="attachment://figure.png")
 
