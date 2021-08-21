@@ -130,7 +130,7 @@ class Plot(commands.Cog):
                 y = np.array(list(resDict.values()))
 
                 plt.clf()
-                plt.bar(x, y)
+                plt.bar(x, y, color="green")
                 plt.xticks(fontsize=7)
                 plt.xlabel("Index", fontsize=7)
                 plt.ylabel("Number", fontsize=7)
@@ -200,7 +200,7 @@ class Plot(commands.Cog):
                 y = np.array(list(resDict.values()))
 
                 plt.clf()
-                plt.bar(x, y)
+                plt.bar(x, y, color="red")
                 plt.xticks(fontsize=7, rotation=90)
                 plt.ylabel("Number", fontsize=7)
 
