@@ -85,6 +85,7 @@ Keep in mind though, that if you close the terminal, the program will terminate 
 ## Future Plans
 
 * Lockout Matches
+* Contest Reminders
 
 <b>NOTE:</b> This is still in progress, and may not be complete.
 
