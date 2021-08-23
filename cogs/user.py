@@ -23,8 +23,11 @@ class User(commands.Cog):
                     data = await r.json()
 
                     # Assigning a color according to rank
+
                     color = 0xff0000
-                    if data["result"][0]["rank"] == "newbie":
+                    if "rank" not in data["result"][0]:
+                        color = 0x000000
+                    elif data["result"][0]["rank"] == "newbie":
                         color = 0x918f8e
                     elif data["result"][0]["rank"] == "pupil":
                         color = 0x087515
@@ -52,10 +55,16 @@ class User(commands.Cog):
                         Embed.add_field(
                             name="City", value=data["result"][0]["city"] + ', ' + data["result"][0]["country"], inline=False)
 
-                    Embed.add_field(
-                        name="Rank", value=data["result"][0]["rank"].title(), inline=False)
-                    Embed.add_field(name="Rating",
-                                    value=data["result"][0]["rating"], inline=False)
+                    if "rank" in data["result"][0]:
+                        Embed.add_field(
+                            name="Rank", value=data["result"][0]["rank"].title(), inline=False)
+                    else:
+                        Embed.add_field(
+                            name="Rank", value="Unranked", inline=False)
+
+                    if "rating" in data["result"][0]:
+                        Embed.add_field(name="Rating",
+                                        value=data["result"][0]["rating"], inline=False)
 
                     Embed.set_footer(icon_url=ctx.author.avatar_url,
                                      text=str(ctx.author))
