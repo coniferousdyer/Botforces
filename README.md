@@ -86,6 +86,7 @@ Keep in mind though, that if you close the terminal, the program will terminate 
 
 * Lockout Matches
 * Contest Reminders
+* Switching to an SQL-based database system to store data
 
 <b>NOTE:</b> This is still in progress, and may not be complete.
 
