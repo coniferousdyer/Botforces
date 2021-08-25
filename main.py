@@ -12,7 +12,7 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 cogs = ['cogs.help', 'cogs.user', 'cogs.stalk',
-        'cogs.problem', 'cogs.upcoming', 'cogs.duel', 'cogs.plot']
+        'cogs.problem', 'cogs.upcoming', 'cogs.duel', 'cogs.plot', 'cogs.error']
 
 for cog in cogs:
     try:

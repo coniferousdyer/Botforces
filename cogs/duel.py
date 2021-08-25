@@ -14,21 +14,26 @@ class Duel(commands.Cog):
     # Command to suggest a random problem, with optional tags and rating
     @commands.command()
     async def duel(self, ctx, usr: discord.User = None, rating=0):
+
+        # Checking if the author was a bot
+        if ctx.message.author == self.client.user or ctx.message.author.bot:
+            return
+            
         async with aiohttp.ClientSession() as session:
 
             # Checking if a user was mentioned
             if usr == None:
-                await ctx.send("Please mention whom you want to duel.")
+                await ctx.send(":x: Please mention whom you want to duel.")
                 return
 
             # Checking if rating was not given
             if rating == 0:
-                await ctx.send("Please provide a rating.")
+                await ctx.send(":x: Please provide a rating.")
                 return
 
             # Checking if the user mentioned themselves
             if usr == ctx.author:
-                await ctx.send("You can't duel yourself.")
+                await ctx.send(":x: You can't duel yourself.")
                 return
 
             reactMsg = await ctx.send(f"<@{usr.id}>, react to this message with :thumbsup: within 30 seconds to accept the duel.")
@@ -41,7 +46,7 @@ class Duel(commands.Cog):
             try:
                 reaction, user = await self.client.wait_for('reaction_add', timeout=30.0, check=check)
             except asyncio.TimeoutError:
-                await ctx.send("Sorry, the duel expired because 30 seconds were up!")
+                await ctx.send(":x: Sorry, the duel expired because 30 seconds were up!")
                 return
             else:
                 await ctx.send(f"<@{usr.id}> has accepted the duel! Send handles of <@{ctx.message.author.id}> and <@{usr.id}> respectively like this within the next 60 seconds:\n```handles <handle of {ctx.author.display_name}> <handle of {usr.display_name}>```")
@@ -51,7 +56,7 @@ class Duel(commands.Cog):
                 try:
                     msg = await self.client.wait_for('message', timeout=60.0, check=check_2)
                 except:
-                    await ctx.send("Sorry, the duel expired because 60 seconds were up!")
+                    await ctx.send(":x: Sorry, the duel expired because 60 seconds were up!")
                     return
                 else:
                     await ctx.send("Starting duel...")
@@ -71,7 +76,7 @@ class Duel(commands.Cog):
 
                 # In case no problems are found
                 if len(problemList) == 0:
-                    await ctx.send("Sorry, no problems could be found. Please try again.")
+                    await ctx.send(":x: Sorry, no problems could be found. Please try again.")
                     return
 
                 # Storing problem

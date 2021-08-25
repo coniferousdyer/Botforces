@@ -1,5 +1,4 @@
 import discord
-from discord.embeds import Embed
 from discord.ext import commands
 
 
@@ -10,6 +9,10 @@ class Help(commands.Cog):
     # Command to display all commands (and optionally, descriptions of what they do)
     @commands.command()
     async def help(self, ctx, cmd=None):
+
+        # Checking if the author was a bot
+        if ctx.message.author == self.client.user or ctx.message.author.bot:
+            return
 
         # If no parameter was provided
         if cmd == None:
@@ -154,7 +157,7 @@ class Help(commands.Cog):
 
         # If an invalid command was given
         else:
-            await ctx.send(f"Command \"{cmd}\" does not exist!")
+            await ctx.send(f":x: Command \"{cmd}\" does not exist!")
 
     @commands.Cog.listener()
     async def on_ready(self):

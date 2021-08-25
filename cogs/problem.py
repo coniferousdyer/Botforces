@@ -1,7 +1,6 @@
 import discord
 import csv
 import random
-import aiohttp
 from discord.ext import commands
 
 
@@ -12,6 +11,10 @@ class Problem(commands.Cog):
     # Command to suggest a random problem, with optional tags and rating
     @commands.command()
     async def problem(self, ctx, *args):
+
+        # Checking if the author was a bot
+        if ctx.message.author == self.client.user or ctx.message.author.bot:
+            return
 
         # Opening problems.csv and reading the data into a list
         with open('data/problems.csv') as csvFile:
@@ -44,7 +47,7 @@ class Problem(commands.Cog):
 
         # In case no problems are found
         if len(problemList) == 0:
-            await ctx.send("Sorry, no problems could be found. Please try again.")
+            await ctx.send(":x: Sorry, no problems could be found. Please try again.")
             return
 
         # Storing problem
@@ -59,10 +62,11 @@ class Problem(commands.Cog):
             name="Rating", value=problem[4], inline=False)
 
         # Formatting the strings in the list and joining them to form a string
-        problem[3] = map(
-            lambda str: '||' + str + '||', problem[3])
-        tags = ','.join(problem[3])
-        Embed.add_field(name="Tags", value=tags)
+        if problem[3] != []:  
+            problem[3] = map(
+            lambda str: '||' + str + '||', problem[3])  
+            tags = ','.join(problem[3])
+            Embed.add_field(name="Tags", value=tags)
 
         Embed.set_footer(icon_url=ctx.author.avatar_url,
                          text=str(ctx.author))

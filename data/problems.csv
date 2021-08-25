@@ -1,3 +1,6 @@
+1561,D1,Up the Strip (simplified version),"['brute force', 'data structures', 'dp', 'math', 'number theory']",1700
+1561,C,Deep Down Below,"['binary search', 'greedy', 'sortings']",1300
+1561,A,Simply Strange Sort,"['brute force', 'implementation', 'sortings']",800
 1560,F2,Nearest Beautiful Number (hard version),"['bitmasks', 'brute force', 'constructive algorithms', 'dfs and similar', 'dp', 'greedy']",2100
 1560,F1,Nearest Beautiful Number (easy version),"['binary search', 'bitmasks', 'brute force', 'constructive algorithms', 'dfs and similar', 'greedy']",1900
 1560,E,Polycarp and String Transformation,"['binary search', 'implementation', 'sortings', 'strings']",1800
@@ -11,6 +14,12 @@
 1559,C,Mocha and Hiking,"['constructive algorithms', 'graphs']",1200
 1559,B,Mocha and Red and Blue,"['dp', 'greedy']",900
 1559,A,Mocha and Math,"['bitmasks', 'constructive algorithms', 'math']",900
+1558,F,Strange Sort,"['data structures', 'sortings']",3300
+1558,E,Down Below,"['binary search', 'dfs and similar', 'graphs', 'meet-in-the-middle', 'shortest paths']",3000
+1558,D,Top-Notch Insertions,"['combinatorics', 'data structures']",2600
+1558,C,Bottom-Tier Reversals,"['constructive algorithms', 'greedy']",2000
+1558,B,Up the Strip,"['brute force', 'dp', 'math', 'number theory']",1900
+1558,A,Charmed by the Game,"['brute force', 'math']",1300
 1557,E,Assiut Chess,"['brute force', 'constructive algorithms', 'interactive']",2800
 1557,D,Ezzat and Grid,"['data structures', 'dp', 'greedy']",2200
 1557,C,Moamen and XOR,"['bitmasks', 'combinatorics', 'dp', 'math', 'matrices']",1700

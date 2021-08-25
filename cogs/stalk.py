@@ -11,8 +11,12 @@ class Stalk(commands.Cog):
     @ commands.command()
     async def stalk(self, ctx, handle=None, number=10):
 
+        # Checking if the author was a bot
+        if ctx.message.author == self.client.user or ctx.message.author.bot:
+            return
+
         if handle == None:
-            await ctx.send("Please provide a handle.")
+            await ctx.send(":x: Please provide a handle.")
             return
 
         async with ctx.typing():
@@ -21,7 +25,7 @@ class Stalk(commands.Cog):
 
                     # If user was not found
                     if not r.ok:
-                        await ctx.send(f"Sorry, user with handle {handle} could not be found.")
+                        await ctx.send(f":x: Sorry, user with handle {handle} could not be found.")
                         return
 
                     # Reading the data as JSON data and storing the dictionary in data variable

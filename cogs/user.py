@@ -10,13 +10,18 @@ class User(commands.Cog):
     # Command to search for a user and display their basic details
     @commands.command()
     async def user(self, ctx, handle):
+
+        # Checking if the author was a bot
+        if ctx.message.author == self.client.user or ctx.message.author.bot:
+            return
+            
         async with ctx.typing():
             async with aiohttp.ClientSession() as session:
                 async with session.get(f'https://codeforces.com/api/user.info?handles={handle}') as r:
 
                     # If the user was not found
                     if not r.ok:
-                        await ctx.send(f"Sorry, user with handle {handle} could not be found.")
+                        await ctx.send(f":x: Sorry, user with handle {handle} could not be found.")
                         return
 
                     # Reading the data as JSON data and storing the dictionary in data variable
