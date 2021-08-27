@@ -18,12 +18,16 @@ class Duel(commands.Cog):
         # Checking if the author was a bot
         if ctx.message.author == self.client.user or ctx.message.author.bot:
             return
-            
+
         async with aiohttp.ClientSession() as session:
 
             # Checking if a user was mentioned
             if usr == None:
                 await ctx.send(":x: Please mention whom you want to duel.")
+                return
+
+            if usr.bot or usr == self.client.user:
+                await ctx.send(":x: You can't duel a bot.")
                 return
 
             # Checking if rating was not given
@@ -52,10 +56,10 @@ class Duel(commands.Cog):
                 await ctx.send(f"<@{usr.id}> has accepted the duel! Send handles of <@{ctx.message.author.id}> and <@{usr.id}> respectively like this within the next 60 seconds:\n```handles <handle of {ctx.author.display_name}> <handle of {usr.display_name}>```")
 
                 def check_2(m):
-                    return m.content.startswith("handles") and m.channel == reactMsg.channel and (m.author == user or m.author == ctx.message.author) and len(m.content.split()) == 3
+                    return m.content.startswith("handles") and m.channel == reactMsg.channel and (m.author == usr or m.author == ctx.message.author) and len(m.content.split()) == 3
                 try:
                     msg = await self.client.wait_for('message', timeout=60.0, check=check_2)
-                except:
+                except asyncio.TimeoutError:
                     await ctx.send(":x: Sorry, the duel expired because 60 seconds were up!")
                     return
                 else:
@@ -69,10 +73,6 @@ class Duel(commands.Cog):
                 # Filtering out problems of given rating
                 problemList = list(filter(
                     lambda p: p[4] == f"{rating}", problemList))
-
-                for problem in problemList:
-                    problem[3] = problem[3].strip("[]").split(", ")
-                    problem[3] = list(map(lambda x: x.strip("'"), problem[3]))
 
                 # In case no problems are found
                 if len(problemList) == 0:
@@ -105,51 +105,52 @@ class Duel(commands.Cog):
 
                 # Waiting for the duel to end
                 def check_3(m):
-                    return m.content == "endduel" and m.channel == reactMsg.channel and (m.author == user or m.author == ctx.message.author)
+                    return m.content == "endduel" and m.channel == reactMsg.channel and (m.author == usr or m.author == ctx.message.author)
 
                 msg = await self.client.wait_for('message', check=check_3)
 
-                # Obtaining and comparing the last submissions of the two users
-                async with session.get(f'https://codeforces.com/api/user.status?handle={handles[1]}&from=1&count=1') as r1:
-                    async with session.get(f'https://codeforces.com/api/user.status?handle={handles[2]}&from=1&count=1') as r2:
+                async with ctx.typing():
+                    # Obtaining and comparing the last submissions of the two users
+                    async with session.get(f'https://codeforces.com/api/user.status?handle={handles[1]}&from=1&count=1') as r1:
+                        async with session.get(f'https://codeforces.com/api/user.status?handle={handles[2]}&from=1&count=1') as r2:
 
-                        # Saving the last submission in JSON form
-                        data_1 = await r1.json()
-                        data_2 = await r2.json()
+                            # Saving the last submission in JSON form
+                            data_1 = await r1.json()
+                            data_2 = await r2.json()
 
-                        # Boolean variables to check whether both users solved the problem
-                        match_1 = False
-                        match_2 = False
+                            # Boolean variables to check whether both users solved the problem
+                            match_1 = False
+                            match_2 = False
 
-                        # Converting the timestamps to datetime objects
-                        data_1["result"][0]["creationTimeSeconds"] = datetime.datetime.fromtimestamp(
-                            data_1["result"][0]["creationTimeSeconds"])
-                        data_2["result"][0]["creationTimeSeconds"] = datetime.datetime.fromtimestamp(
-                            data_2["result"][0]["creationTimeSeconds"])
+                            # Converting the timestamps to datetime objects
+                            data_1["result"][0]["creationTimeSeconds"] = datetime.datetime.fromtimestamp(
+                                data_1["result"][0]["creationTimeSeconds"])
+                            data_2["result"][0]["creationTimeSeconds"] = datetime.datetime.fromtimestamp(
+                                data_2["result"][0]["creationTimeSeconds"])
 
-                        if problem[0] == data_1["result"][0]["problem"]["contestId"] and data_1["result"][0]["creationTimeSeconds"] > startTime and problem[1] == data_1["result"][0]["problem"]["index"] and data_1["result"][0]["verdict"] == "OK":
-                            match_1 = True
-                        if problem[0] == data_2["result"][0]["problem"]["contestId"] and data_2["result"][0]["creationTimeSeconds"] > startTime and problem[1] == data_2["result"][0]["problem"]["index"] and data_2["result"][0]["verdict"] == "OK":
-                            match_2 = True
+                            if int(problem[0]) == data_1["result"][0]["problem"]["contestId"] and data_1["result"][0]["creationTimeSeconds"] > startTime and problem[1] == data_1["result"][0]["problem"]["index"] and data_1["result"][0]["verdict"] == "OK":
+                                match_1 = True
+                            if int(problem[0]) == data_2["result"][0]["problem"]["contestId"] and data_2["result"][0]["creationTimeSeconds"] > startTime and problem[1] == data_2["result"][0]["problem"]["index"] and data_2["result"][0]["verdict"] == "OK":
+                                match_2 = True
 
-                        # If both users solved the problem
-                        if match_1 and match_2:
-                            if data_1["result"][0]["creationTimeSeconds"] <= data_2["result"][0]["creationTimeSeconds"]:
-                                await ctx.send(f"<@{ctx.message.author.id}> has won the duel against <@{user.id}>!")
-                            else:
-                                await ctx.send(f"<@{user.id}> has won the duel against <@{ctx.message.author.id}>!")
+                # If both users solved the problem
+                if match_1 and match_2:
+                    if data_1["result"][0]["creationTimeSeconds"] <= data_2["result"][0]["creationTimeSeconds"]:
+                        await ctx.send(f"<@{ctx.message.author.id}> has won the duel against <@{usr.id}>!")
+                    else:
+                        await ctx.send(f"<@{usr.id}> has won the duel against <@{ctx.message.author.id}>!")
 
-                        # If only user_1 solved the problem
-                        elif match_1:
-                            await ctx.send(f"<@{ctx.message.author.id}> has won the duel against <@{user.id}>!")
+                # If only user_1 solved the problem
+                elif match_1:
+                    await ctx.send(f"<@{ctx.message.author.id}> has won the duel against <@{usr.id}>!")
 
-                        # If only user_2 solved the problem
-                        elif match_2:
-                            await ctx.send(f"<@{user.id}> has won the duel against <@{ctx.message.author.id}>!")
+                # If only user_2 solved the problem
+                elif match_2:
+                    await ctx.send(f"<@{usr.id}> has won the duel against <@{ctx.message.author.id}>!")
 
-                        # If neither solved the problem
-                        else:
-                            await ctx.send("Duel ended, neither won!")
+                # If neither solved the problem
+                else:
+                    await ctx.send("Duel ended, neither won!")
 
     @commands.Cog.listener()
     async def on_ready(self):
