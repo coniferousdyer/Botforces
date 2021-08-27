@@ -56,7 +56,7 @@ $ source <name_of_virtual_environment>/bin/activate
 $ pip install -r requirements.txt
 ```
 
-5. Create a file in the directory and name it `.env`. Take the token you copied earlier in and paste it in place of `PASTE_TOKEN_HERE`. Then paste the following line in the `.env` file.
+5. Create a file in the directory and name it `.env`. Take the token you copied earlier and paste it in place of `PASTE_TOKEN_HERE`. Then paste the following line in the `.env` file.
 
 ```bash
 DISCORD_TOKEN=PASTE_TOKEN_HERE
