@@ -15,7 +15,7 @@
 1559,B,Mocha and Red and Blue,"['dp', 'greedy']",900
 1559,A,Mocha and Math,"['bitmasks', 'constructive algorithms', 'math']",900
 1558,F,Strange Sort,"['data structures', 'sortings']",3300
-1558,E,Down Below,"['binary search', 'dfs and similar', 'graphs', 'meet-in-the-middle', 'shortest paths']",3000
+1558,E,Down Below,"['binary search', 'dfs and similar', 'graphs', 'greedy', 'meet-in-the-middle', 'shortest paths']",3000
 1558,D,Top-Notch Insertions,"['combinatorics', 'data structures']",2600
 1558,C,Bottom-Tier Reversals,"['constructive algorithms', 'greedy']",2000
 1558,B,Up the Strip,"['brute force', 'dp', 'math', 'number theory', 'two pointers']",1900

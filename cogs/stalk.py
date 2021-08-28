@@ -51,9 +51,14 @@ class Stalk(commands.Cog):
                                     submissions += f"{count}. [{problem['problem']['name']}](https://codeforces.com/problemset/problem/{problem['problem']['contestId']}/{problem['problem']['index']}) - ?\n"
                                 count += 1
 
+                    # Checking if user has made any submissions
+                    if submissions == '':
+                        await ctx.send(f"{handle} has not solved any problems!")
+                        return
+
                     # Creating an embed
                     Embed = discord.Embed(
-                        title=f"Last {number} solved by {handle}",
+                        title=f"Last {count} solved by {handle}",
                         description=submissions,
                         color=0xff0000)
 

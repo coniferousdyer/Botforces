@@ -43,13 +43,15 @@ class Plot(commands.Cog):
                             if "rating" in problem["problem"]:
                                 pDict[problem["problem"]["name"]
                                       ] = problem["problem"]["rating"]
-                            else:
-                                pDict[problem["problem"]["name"]] = "?"
+
+                    if not pDict:
+                        await ctx.send(f"{handle} has not solved any problems!")
+                        return
 
                     resDict = dict({})
 
                     for rating in pDict.values():
-                        resDict[rating] = resDict.get(rating, 0) + 1
+                        resDict[str(rating)] = resDict.get(str(rating), 0) + 1
 
                     resDict = dict(sorted(resDict.items(), key=lambda x: x[1]))
 
@@ -120,6 +122,10 @@ class Plot(commands.Cog):
                             pDict[problem["problem"]["name"]
                                   ] = problem["problem"]["index"]
 
+                    if not pDict:
+                        await ctx.send(f"{handle} has not solved any problems!")
+                        return
+
                     resDict = dict({})
 
                     for index in pDict.values():
@@ -187,6 +193,10 @@ class Plot(commands.Cog):
                         if problem["verdict"] == "OK":
                             pDict[problem["problem"]["name"]
                                   ] = problem["problem"]["tags"]
+
+                    if not pDict:
+                        await ctx.send(f"{handle} has not solved any problems!")
+                        return
 
                     resDict = dict({})
 
