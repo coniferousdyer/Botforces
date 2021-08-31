@@ -16,8 +16,8 @@ class Error(commands.Cog):
             message = ":x: One or more arguments are missing!"
         elif isinstance(error, commands.TooManyArguments):
             message = ":x: Too many arguments were provided!"
-        else:
-            message = ":x: Something went wrong while running the command!"
+        # else:
+        #     message = ":x: Something went wrong while running the command!"
 
         if message != '':
             await ctx.send(message)

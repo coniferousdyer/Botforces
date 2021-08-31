@@ -144,11 +144,25 @@ class Lockout(commands.Cog):
                                 Embed.add_field(
                                     name=f"Points for {usr.display_name}", value=userPoints[1])
 
+                                # Storing the start time of the challenge
+                                startTime = datetime.datetime.now()
+
+                                # Displaying time left
+                                m, s = divmod(
+                                    ((startTime + datetime.timedelta(minutes=int(duration[1]))) - startTime).total_seconds(), 60)
+                                h = int(m//60)
+                                m = int(m % 60)
+                                dateString = 'Time left: '
+
+                                if h != 0:
+                                    dateString += f"{h} hours, "
+                                if m != 0:
+                                    dateString += f"{m} minutes"
+
+                                Embed.set_footer(text=dateString)
+
                             # Sending embed
                             await ctx.send(embed=Embed)
-
-                            # Storing the start time of the challenge
-                            startTime = datetime.datetime.now()
 
                             # Deleting problem list since we don't need it anymore
                             del problemList
@@ -232,6 +246,20 @@ class Lockout(commands.Cog):
                                                 problem_string += f"{count}. Solved - {points[count]} points\n"
                                             count += 1
 
+                                        # Obtaining current time and thus time left
+                                        currentTime = datetime.datetime.now()
+                                        m, s = divmod(
+                                            ((startTime + datetime.timedelta(minutes=int(duration[1]))) - currentTime).total_seconds(), 60)
+                                        h = int(m//60)
+                                        m = int(m % 60)
+                                        dateString = 'Time left: '
+
+                                        if h != 0:
+                                            dateString += f"{h} hours, "
+                                        if m != 0:
+                                            dateString += f"{m} minutes, "
+                                        dateString += f"{int(s)} seconds"
+
                                         # Creating embed
                                         Embed = discord.Embed(title=f"{ctx.author.display_name} vs {usr.display_name}",
                                                               description=problem_string,
@@ -241,6 +269,8 @@ class Lockout(commands.Cog):
                                             name=f"Points for {ctx.author.display_name}", value=userPoints[0])
                                         Embed.add_field(
                                             name=f"Points for {usr.display_name}", value=userPoints[1])
+
+                                        Embed.set_footer(text=dateString)
 
                                         # Sending embed
                                         await ctx.send(embed=Embed)

@@ -1,3 +1,10 @@
+1562,F,Tubular Bells,"['interactive', 'math', 'number theory', 'probabilities']",2900
+1562,E,Rescue Niwen!,"['brute force', 'dp', 'string suffix structures', 'strings']",2500
+1562,D2,Two Hundred Twenty One (hard version),"['binary search', 'constructive algorithms', 'data structures', 'dp', 'math']",2200
+1562,D1,Two Hundred Twenty One (easy version),"['data structures', 'dp', 'math']",1700
+1562,C,Rings,"['constructive algorithms', 'math']",1500
+1562,B,Scenes From a Memory,"['brute force', 'constructive algorithms', 'implementation', 'math', 'number theory']",1000
+1562,A,The Miracle and the Sleeper,"['greedy', 'math']",800
 1561,D1,Up the Strip (simplified version),"['brute force', 'data structures', 'dp', 'math', 'number theory']",1700
 1561,C,Deep Down Below,"['binary search', 'greedy', 'sortings']",1300
 1561,A,Simply Strange Sort,"['brute force', 'implementation', 'sortings']",800
@@ -25,6 +32,14 @@
 1557,C,Moamen and XOR,"['bitmasks', 'combinatorics', 'dp', 'math', 'matrices']",1700
 1557,B,Moamen and k-subarrays,"['greedy', 'sortings']",1100
 1557,A,Ezzat and Two Subsequences,"['brute force', 'math', 'sortings']",800
+1556,H,DIY Tree,"['graphs', 'greedy', 'math', 'probabilities']",3300
+1556,G,Gates to Another World,"['bitmasks', 'data structures', 'dsu', 'two pointers']",3300
+1556,F,Sports Betting,"['bitmasks', 'combinatorics', 'dp', 'graphs', 'math', 'probabilities']",2500
+1556,E,Equilibrium,"['data structures', 'greedy']",2200
+1556,D,Take a Guess,"['bitmasks', 'constructive algorithms', 'interactive', 'math']",1800
+1556,C,Compressed Bracket Sequence,"['brute force', 'implementation']",1800
+1556,B,Take Your Places!,['implementation'],1300
+1556,A,A Variety of Operations,['math'],800
 1555,F,Good Graph,"['data structures', 'dsu', 'graphs', 'trees']",2700
 1555,E,Boring Segments,"['data structures', 'sortings', 'trees', 'two pointers']",2100
 1555,D,Say No to Palindromes,"['brute force', 'constructive algorithms', 'dp', 'strings']",1600
@@ -4581,7 +4596,7 @@
 576,B,Invariance of Tree,"['constructive algorithms', 'dfs and similar', 'greedy', 'trees']",2100
 576,A,Vasya and Petya's Game,"['math', 'number theory']",1500
 575,I,Robots protection,['data structures'],2800
-575,H,Bots,"['combinatorics', 'number theory']",1800
+575,H,Bots,"['combinatorics', 'dp', 'math', 'number theory']",1800
 575,G,Run for beer,"['dfs and similar', 'shortest paths']",2200
 575,F,Bulbo,"['dp', 'greedy']",2100
 575,E,Spectator Riots,['geometry'],2800
