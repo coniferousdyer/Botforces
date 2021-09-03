@@ -1,5 +1,6 @@
 import discord
 import aiohttp
+import datetime
 from discord.ext import commands
 
 
@@ -31,6 +32,9 @@ class Stalk(commands.Cog):
                     # Reading the data as JSON data and storing the dictionary in data variable
                     data = await r.json()
 
+                    # Getting the time that the request was made at
+                    startTime = datetime.datetime.now()
+
                     # Creating the string of submissions to be the description of Embed
                     submissions = ''
                     count = 1
@@ -38,17 +42,41 @@ class Stalk(commands.Cog):
                         if problem['verdict'] == "OK":
                             if 'rating' in problem['problem']:
                                 if count == number:
-                                    submissions += f"{count}. [{problem['problem']['name']}](https://codeforces.com/problemset/problem/{problem['problem']['contestId']}/{problem['problem']['index']}) - {problem['problem']['rating']}"
+                                    submissions += f"{count}. [{problem['problem']['name']}](https://codeforces.com/problemset/problem/{problem['problem']['contestId']}/{problem['problem']['index']}) - {problem['problem']['rating']} "
+                                    difference = startTime - \
+                                        datetime.datetime.fromtimestamp(int(problem["creationTimeSeconds"]))
+                                    if difference.days == 1:
+                                        submissions += f"(1 day ago)"
+                                    else:
+                                        submissions += f"({difference.days} days ago)"
                                     break
                                 else:
-                                    submissions += f"{count}. [{problem['problem']['name']}](https://codeforces.com/problemset/problem/{problem['problem']['contestId']}/{problem['problem']['index']}) - {problem['problem']['rating']}\n"
+                                    submissions += f"{count}. [{problem['problem']['name']}](https://codeforces.com/problemset/problem/{problem['problem']['contestId']}/{problem['problem']['index']}) - {problem['problem']['rating']} "
+                                    difference = startTime - \
+                                        datetime.datetime.fromtimestamp(int(problem["creationTimeSeconds"]))
+                                    if difference.days == 1:
+                                        submissions += f"(1 day ago)\n"
+                                    else:
+                                        submissions += f"({difference.days} days ago)\n"
                                 count += 1
                             else:
                                 if count == number:
-                                    submissions += f"{count}. [{problem['problem']['name']}](https://codeforces.com/problemset/problem/{problem['problem']['contestId']}/{problem['problem']['index']}) - ?"
+                                    submissions += f"{count}. [{problem['problem']['name']}](https://codeforces.com/problemset/problem/{problem['problem']['contestId']}/{problem['problem']['index']}) - ? "
+                                    difference = startTime - \
+                                        datetime.datetime.fromtimestamp(int(problem["creationTimeSeconds"]))
+                                    if difference.days == 1:
+                                        submissions += f"(1 day ago)"
+                                    else:
+                                        submissions += f"({difference.days} days ago)"
                                     break
                                 else:
-                                    submissions += f"{count}. [{problem['problem']['name']}](https://codeforces.com/problemset/problem/{problem['problem']['contestId']}/{problem['problem']['index']}) - ?\n"
+                                    submissions += f"{count}. [{problem['problem']['name']}](https://codeforces.com/problemset/problem/{problem['problem']['contestId']}/{problem['problem']['index']}) - ? "
+                                    difference = startTime - \
+                                        datetime.datetime.fromtimestamp(int(problem["creationTimeSeconds"]))
+                                    if difference.days == 1:
+                                        submissions += f"(1 day ago)\n"
+                                    else:
+                                        submissions += f"({difference.days} days ago)\n"
                                 count += 1
 
                     # Checking if user has made any submissions

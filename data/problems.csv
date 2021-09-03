@@ -1,6 +1,6 @@
 1562,F,Tubular Bells,"['interactive', 'math', 'number theory', 'probabilities']",2900
-1562,E,Rescue Niwen!,"['brute force', 'dp', 'string suffix structures', 'strings']",2500
-1562,D2,Two Hundred Twenty One (hard version),"['binary search', 'constructive algorithms', 'data structures', 'dp', 'math']",2200
+1562,E,Rescue Niwen!,"['dp', 'greedy', 'string suffix structures', 'strings']",2500
+1562,D2,Two Hundred Twenty One (hard version),"['data structures', 'math']",2200
 1562,D1,Two Hundred Twenty One (easy version),"['data structures', 'dp', 'math']",1700
 1562,C,Rings,"['constructive algorithms', 'math']",1500
 1562,B,Scenes From a Memory,"['brute force', 'constructive algorithms', 'implementation', 'math', 'number theory']",1000
@@ -35,7 +35,7 @@
 1556,H,DIY Tree,"['graphs', 'greedy', 'math', 'probabilities']",3300
 1556,G,Gates to Another World,"['bitmasks', 'data structures', 'dsu', 'two pointers']",3300
 1556,F,Sports Betting,"['bitmasks', 'combinatorics', 'dp', 'graphs', 'math', 'probabilities']",2500
-1556,E,Equilibrium,"['data structures', 'greedy']",2200
+1556,E,Equilibrium,"['data structures', 'dp', 'greedy']",2200
 1556,D,Take a Guess,"['bitmasks', 'constructive algorithms', 'interactive', 'math']",1800
 1556,C,Compressed Bracket Sequence,"['brute force', 'implementation']",1800
 1556,B,Take Your Places!,['implementation'],1300
