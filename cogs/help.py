@@ -31,6 +31,8 @@ class Help(commands.Cog):
             Embed.add_field(
                 name="duel", value="Challenges another user to a duel over a problem.", inline=False)
             Embed.add_field(
+                name="lockout", value="Challenges another user to a lockout match.", inline=False)
+            Embed.add_field(
                 name="plotrating", value="Plots the problems done by a user, grouped by rating.", inline=False)
             Embed.add_field(
                 name="plotindex", value="Plots the problems done by a user, grouped by contest index.", inline=False)
@@ -105,7 +107,7 @@ class Help(commands.Cog):
                                   color=0xff0000)
 
             Embed.add_field(
-                name="Syntax", value="`-duel @<discord_user>` - To challenge a user\n`endduel` - To end a duel and decide the result (only if a duel is in progress).", inline=False)
+                name="Syntax", value="`-duel @<discord_user> <rating>` - To challenge a user\n`endduel` - To end a duel and decide the result (only if a duel is in progress).", inline=False)
 
             Embed.set_footer(icon_url=ctx.author.avatar_url,
                              text=str(ctx.author))
@@ -148,6 +150,20 @@ class Help(commands.Cog):
 
             Embed.add_field(
                 name="Syntax", value="`-plottags <codeforces_handle>`", inline=False)
+
+            Embed.set_footer(icon_url=ctx.author.avatar_url,
+                             text=str(ctx.author))
+
+            # Sending the embed
+            await ctx.send(embed=Embed)
+
+        elif cmd == "lockout":
+            Embed = discord.Embed(title="lockout",
+                                  description="Challenges another user to a lockout match.",
+                                  color=0xff0000)
+
+            Embed.add_field(
+                name="Syntax", value="`-lockout @<discord_user>` - To challenge a user\n", inline=False)
 
             Embed.set_footer(icon_url=ctx.author.avatar_url,
                              text=str(ctx.author))
