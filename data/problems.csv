@@ -1,3 +1,32 @@
+1573,B,Swaps,"['greedy', 'math', 'sortings']",1400
+1573,A,Countdown,['greedy'],800
+1572,F,Stations,['data structures'],3400
+1572,E,Polygon,"['binary search', 'dp']",3000
+1572,D,Bridge Club,"['flows', 'graphs', 'greedy']",2800
+1572,C,Paint,"['dp', 'greedy']",2700
+1572,B,Xor of 3,"['brute force', 'constructive algorithms', 'greedy']",2500
+1572,A,Book,"['binary search', 'data structures', 'dp', 'graphs', 'implementation']",1800
+1569,F,Palindromic Hamiltonian Path,"['brute force', 'dfs and similar', 'dp', 'graphs', 'hashing']",3000
+1569,E,Playoff Restoration,"['bitmasks', 'brute force', 'hashing', 'implementation', 'meet-in-the-middle']",2600
+1569,D,Inconvenient Pairs,"['binary search', 'data structures', 'implementation', 'sortings', 'two pointers']",1900
+1569,C,Jury Meeting,"['combinatorics', 'math']",1500
+1569,B,Chess Tournament,['constructive algorithms'],1000
+1569,A,Balanced Substring,['implementation'],800
+1567,F,One-Four Overload,"['constructive algorithms', 'dfs and similar', 'dsu', 'graphs', 'implementation']",2700
+1567,E,Non-Decreasing Dilemma,"['data structures', 'divide and conquer', 'math']",2200
+1567,D,Expression Evaluation Error,"['constructive algorithms', 'greedy', 'implementation', 'math']",2000
+1567,C,Carrying Conundrum,"['bitmasks', 'combinatorics', 'dp', 'math']",1600
+1567,B,MEXor Mixup,"['bitmasks', 'greedy']",1000
+1567,A,Domino Disaster,"['implementation', 'strings']",800
+1566,H,Xor-quiz,"['constructive algorithms', 'dp', 'interactive', 'math', 'number theory']",3200
+1566,G,Four Vertices,"['constructive algorithms', 'data structures', 'graphs', 'greedy', 'implementation', 'shortest paths']",3100
+1566,F,Points Movement,"['data structures', 'dp', 'greedy', 'implementation', 'sortings']",2600
+1566,E,Buds Re-hanging,"['constructive algorithms', 'dfs and similar', 'dp', 'greedy', 'trees']",2000
+1566,D2,Seating Arrangements (hard version) ,"['data structures', 'greedy', 'implementation', 'sortings', 'two pointers']",1600
+1566,D1,Seating Arrangements (easy version) ,"['data structures', 'greedy', 'sortings']",1100
+1566,C,MAX-MEX Cut,"['bitmasks', 'constructive algorithms', 'dp', 'greedy']",1000
+1566,B,MIN-MEX Cut,"['bitmasks', 'constructive algorithms', 'dp', 'greedy']",800
+1566,A,Median Maximization,"['binary search', 'greedy', 'math']",800
 1562,F,Tubular Bells,"['interactive', 'math', 'number theory', 'probabilities']",2900
 1562,E,Rescue Niwen!,"['dp', 'greedy', 'string suffix structures', 'strings']",2500
 1562,D2,Two Hundred Twenty One (hard version),"['data structures', 'math']",2200
@@ -4238,7 +4267,7 @@
 661,C,Array Sum,['*special'],2000
 661,B,Seasons,['*special'],1900
 661,A,Lazy Caterer Sequence,['*special'],1300
-660,F,Bear and Bowling 4,"['binary search', 'data structures', 'geometry', 'ternary search']",2500
+660,F,Bear and Bowling 4,"['binary search', 'data structures', 'divide and conquer', 'geometry', 'ternary search']",2500
 660,E,Different Subsets For All Tuples,['combinatorics'],2300
 660,D,Number of Parallelograms,['geometry'],1900
 660,C,Hard Process,"['binary search', 'dp', 'two pointers']",1600
@@ -5719,7 +5748,7 @@
 282,A,Bit++,['implementation'],800
 281,B,Nearest Fraction,"['brute force', 'implementation', 'two pointers']",1700
 281,A,Word Capitalization,"['implementation', 'strings']",800
-280,E,Sequence Transformation,"['data structures', 'dp', 'implementation', 'math']",3000
+280,E,Sequence Transformation,"['brute force', 'data structures', 'dp', 'implementation', 'math']",3000
 280,D,k-Maximum Subsequence Sum,"['data structures', 'flows', 'graphs', 'implementation']",2800
 280,C,Game on Tree,"['implementation', 'math', 'probabilities', 'trees']",2200
 280,B,Maximum Xor Secondary,"['data structures', 'implementation', 'two pointers']",1800

@@ -13,7 +13,7 @@ class Duel(commands.Cog):
 
     # Command to suggest a random problem, with optional tags and rating
     @commands.command()
-    async def duel(self, ctx, usr: discord.User = None, rating=0):
+    async def duel(self, ctx, usr: discord.User = None, *args):
 
         # Checking if the author was a bot
         if ctx.message.author == self.client.user or ctx.message.author.bot:
@@ -28,11 +28,6 @@ class Duel(commands.Cog):
 
             if usr.bot or usr == self.client.user:
                 await ctx.send(":x: You can't duel a bot.")
-                return
-
-            # Checking if rating was not given
-            if rating == 0:
-                await ctx.send(":x: Please provide a rating.")
                 return
 
             # Checking if the user mentioned themselves
@@ -70,9 +65,30 @@ class Duel(commands.Cog):
                 with open('data/problems.csv') as csvFile:
                     problemList = list(csv.reader(csvFile))
 
-                # Filtering out problems of given rating
-                problemList = list(filter(
-                    lambda p: p[4] == f"{rating}", problemList))
+                # Initialising rating to 0 and tags to empty list
+                rating = 0
+                tags = []
+
+                # Separating the rating and the tags
+                for arg in args:
+                    if arg.isdigit():
+                        rating = int(arg)
+                    else:
+                        tags.append(arg)
+
+                # If rating was given, i.e. rating != 0, then filter the list
+                if rating != 0:
+                    problemList = list(filter(
+                        lambda p: p[4] == f"{rating}", problemList))
+
+                for problem in problemList:
+                    problem[3] = problem[3].strip("[]").split(", ")
+                    problem[3] = list(map(lambda x: x.strip("'"), problem[3]))
+
+                # If tags were given, i.e. tags is not empty, filter the list
+                if tags != []:
+                    problemList = list(filter(lambda p: all(
+                        x in p[3] for x in tags), problemList))
 
                 # In case no problems are found
                 if len(problemList) == 0:
@@ -90,6 +106,14 @@ class Duel(commands.Cog):
 
                 Embed.add_field(
                     name="Rating", value=problem[4], inline=False)
+
+                # Formatting the strings in the list and joining them to form a string
+                if tags != [] and problem[3] != []:  
+                    problem[3] = map(
+                    lambda str: '||' + str + '||', problem[3])  
+                    tags = ','.join(problem[3])
+                    Embed.add_field(name="Tags", value=tags, inline=False)
+
 
                 Embed.add_field(
                     name="Duel", value=f"{ctx.author.display_name} vs {usr.display_name}")

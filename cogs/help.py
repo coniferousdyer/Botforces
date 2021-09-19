@@ -107,7 +107,7 @@ class Help(commands.Cog):
                                   color=0xff0000)
 
             Embed.add_field(
-                name="Syntax", value="`-duel @<discord_user> <rating>` - To challenge a user\n`endduel` - To end a duel and decide the result (only if a duel is in progress).", inline=False)
+                name="Syntax", value="`-duel @<discord_user> <optional_rating> <optional_tags>` - To challenge a user\n`endduel` - To end a duel and decide the result (only if a duel is in progress).", inline=False)
 
             Embed.set_footer(icon_url=ctx.author.avatar_url,
                              text=str(ctx.author))
