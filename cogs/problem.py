@@ -1,12 +1,23 @@
+from sqlite3.dbapi2 import connect
 import discord
-import csv
+import sqlite3
 import random
 from discord.ext import commands
+from discord.ext.commands.core import check
 
 
 class Problem(commands.Cog):
     def __init__(self, client):
         self.client = client
+
+    # Function to check if all tags are present
+    def check_tags(self, problem_tags, tags):
+        count = 0
+        for tag in tags:
+            if "\'" + tag + "\'" in problem_tags:
+                count += 1
+
+        return count == len(tags)
 
     # Command to suggest a random problem, with optional tags and rating
     @commands.command()
@@ -16,36 +27,33 @@ class Problem(commands.Cog):
         if ctx.message.author == self.client.user or ctx.message.author.bot:
             return
 
-        # Opening problems.csv and reading the data into a list
-        with open('data/problems.csv') as csvFile:
-            problemList = list(csv.reader(csvFile))
-
-        # Initialising rating to 0 and tags to empty list
+        # Separating the rating and the tags
         rating = 0
         tags = []
-
-        # Separating the rating and the tags
         for arg in args:
             if arg.isdigit():
                 rating = int(arg)
             else:
                 tags.append(arg)
 
-        # If rating was given, i.e. rating != 0, then filter the list
+        # Opening data.db and reading the problems of rating (if mentioned) into a list
+        connection = sqlite3.connect("data/data.db")
+        cursor = connection.cursor()
         if rating != 0:
-            problemList = list(filter(
-                lambda p: p[4] == f"{rating}", problemList))
+            problemList = cursor.execute(
+                "SELECT * FROM problems WHERE rating = ?", (rating,)).fetchall()
+        else:
+            problemList = cursor.execute("SELECT * FROM problems").fetchall()
 
-        for problem in problemList:
-            problem[3] = problem[3].strip("[]").split(", ")
-            problem[3] = list(map(lambda x: x.strip("'"), problem[3]))
-
-        # If tags were given, i.e. tags is not empty, filter the list
+        # If tags were given, i.e. tags is not empty, check tags and add it to the final list
+        finalList = []
         if tags != []:
-            problemList = list(filter(lambda p: all(
-                x in p[3] for x in tags), problemList))
+            for problem in problemList:
+                if self.check_tags(problem[3], tags):
+                    finalList.append(problem)
 
         # In case no problems are found
+        problemList = finalList
         if len(problemList) == 0:
             await ctx.send(":x: Sorry, no problems could be found. Please try again.")
             return
@@ -61,11 +69,12 @@ class Problem(commands.Cog):
         Embed.add_field(
             name="Rating", value=problem[4], inline=False)
 
-        # Formatting the strings in the list and joining them to form a string
-        if problem[3] != []:  
-            problem[3] = map(
-            lambda str: '||' + str + '||', problem[3])  
-            tags = ','.join(problem[3])
+        # Printing the tags in spoilers
+        if problem[3] != "[]":
+            tags = problem[3].split(", ")
+            tags = [tag.strip("[]\'") for tag in tags]
+            tags = map(lambda str: '||' + str + '||', tags)
+            tags = ','.join(tags)
             Embed.add_field(name="Tags", value=tags)
 
         Embed.set_footer(icon_url=ctx.author.avatar_url,
@@ -73,6 +82,7 @@ class Problem(commands.Cog):
 
         # Sending embed
         await ctx.send(embed=Embed)
+        connection.close()
 
     @commands.Cog.listener()
     async def on_ready(self):

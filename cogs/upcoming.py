@@ -1,7 +1,9 @@
+import sqlite3
+from sqlite3.dbapi2 import connect
 import discord
 import datetime
 import time
-import csv
+import sqlite3
 from discord.ext import commands
 
 
@@ -16,12 +18,13 @@ class Upcoming(commands.Cog):
         # Checking if the author was a bot
         if ctx.message.author == self.client.user or ctx.message.author.bot:
             return
-            
-        with open("data/contests.csv") as csvFile:
-            contestList = list(csv.reader(csvFile))
+
+        connection = sqlite3.connect("data/data.db")
+        cursor = connection.cursor()
+        contestList = cursor.execute("SELECT * from contests").fetchall()
 
         # Reversing the contest list
-        contestList.reverse()
+        contestList = contestList[::-1]
 
         # Creating embed
         Embed = discord.Embed(title="List of upcoming contests",
@@ -29,10 +32,6 @@ class Upcoming(commands.Cog):
 
         # Adding each contest as a field to the embed
         for contest in contestList:
-
-            # Converting times to int from str
-            contest[2] = int(contest[2])
-            contest[3] = int(contest[3])
 
             # Obtaining the time of the contest (dateList[0] -> date, dateList[1] -> time)
             date = str(datetime.datetime.fromtimestamp(
@@ -58,6 +57,7 @@ class Upcoming(commands.Cog):
 
         # Sending embed
         await ctx.send(embed=Embed)
+        connection.close()
 
     @commands.Cog.listener()
     async def on_ready(self):
