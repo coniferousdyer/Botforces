@@ -25,6 +25,15 @@ for cog in cogs:
 async def on_ready():
     await client.change_presence(activity=discord.Game(name="Codeforces"))
     reload_cogs.start()
+
+    # Creating a duels table to store information about ongoing duels
+    connection = sqlite3.connect("data/data.db")
+    cursor = connection.cursor()
+    cursor.execute("DROP TABLE IF EXISTS duels")
+    cursor.execute("CREATE TABLE duels(user1_id BIGINT, user2_id BIGINT, startTime DATETIME, contestId INTEGER, contestIndex TEXT, handle1 TEXT, handle2 TEXT)")
+    connection.commit()
+    connection.close()
+
     print("Bot is online!")
 
 

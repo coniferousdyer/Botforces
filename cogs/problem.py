@@ -51,9 +51,10 @@ class Problem(commands.Cog):
             for problem in problemList:
                 if self.check_tags(problem[3], tags):
                     finalList.append(problem)
+            
+            problemList = finalList
 
         # In case no problems are found
-        problemList = finalList
         if len(problemList) == 0:
             await ctx.send(":x: Sorry, no problems could be found. Please try again.")
             return

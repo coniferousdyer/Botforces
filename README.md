@@ -19,7 +19,7 @@ user|`-user <handle>`|Displays information about the Codeforces user with the re
 |plotindex|`-plotindex <handle>`|Plots the problems done by a user, grouped by index.
 |plottags|`-plottags <handle>`|Plots the problems done by a user, grouped by tags.
 |duel|`-duel <user_mention> <optional_rating> <optional_tags`|Challenges the mentioned user to a duel (over a problem of the provided rating/tags, if mentioned).
-|endduel (only if a duel is in progress)|`endduel`|If sent by one of the users in a duel, ends the duel and checks the result to see who won.
+|endduel (only if a duel is in progress)|`-endduel`|If sent by one of the users in a duel, ends the duel and checks the result to see who won.
 |lockout|`-lockout <user_mention>`|Challenges the mentioned user to a lockout match.
 
 ## Setup
@@ -83,10 +83,11 @@ You're all set! The bot should be online now.
 
 Keep in mind though, that if you close the terminal, the program will terminate and the bot will go offline.
 
-## Future Plans
+## Future Plans/Issues
 
 * Contest Reminders
 * Switching to an SQLite3 database system to store data
+* Ensuring users get only unsolved problems to solve
 * Refactoring the code and distributing it for better maintainability
 
 <b>NOTE:</b> This is still in progress, and may not be complete. I'm open to PRs, so if you would like to change, improve or add something, feel free to make a PR!
