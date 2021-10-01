@@ -1,7 +1,7 @@
 import discord
 import aiohttp
 import asyncio
-import csv
+import sqlite3
 import random
 import datetime
 from discord.ext import commands, tasks
@@ -100,9 +100,9 @@ class Lockout(commands.Cog):
                             duration = msg.content.split()
 
                             async with ctx.typing():
-                                # Opening problems.csv and reading the data into a list
-                                with open('data/problems.csv') as csvFile:
-                                    problemList = list(csv.reader(csvFile))
+                                # Opening data.db and reading the problems into a list
+                                connection = sqlite3.connect("data/data.db")
+                                cursor = connection.cursor()
 
                                 # Defining a string that contains the problems
                                 problem_string = ''
@@ -113,9 +113,9 @@ class Lockout(commands.Cog):
                                 for rating in ratings:
                                     if rating != "ratings":
 
-                                        # Filtering out problems of given rating
-                                        tempList = list(filter(
-                                            lambda p: p[4] == f"{rating}", problemList))
+                                        # Finding problems of given rating
+                                        tempList = cursor.execute(
+                                            "SELECT * FROM problems WHERE rating = ?", (rating,)).fetchall()
 
                                         # In case no problems are found
                                         if len(tempList) == 0:
@@ -161,11 +161,9 @@ class Lockout(commands.Cog):
 
                                 Embed.set_footer(text=dateString)
 
-                            # Sending embed
+                            # Sending embed and closing connection
                             await ctx.send(embed=Embed)
-
-                            # Deleting problem list since we don't need it anymore
-                            del problemList
+                            connection.close()
 
                             # Storing the sum of the points to know when a match gets over
                             sumPoints = 0
@@ -174,7 +172,7 @@ class Lockout(commands.Cog):
                                     sumPoints += int(point)
 
                             # Defining a background task to check the submissions of each user
-                            @tasks.loop(minutes=1)
+                            @tasks.loop(seconds=30)
                             async def checkSubmissions():
                                 async with aiohttp.ClientSession() as session:
                                     # Obtaining and comparing the last submissions of the two users
@@ -282,7 +280,7 @@ class Lockout(commands.Cog):
                                 return m.content.startswith("UPDATE:") and msg.author == self.client.user and userPoints[0] + userPoints[1] == sumPoints
 
                             try:
-                                msg = await self.client.wait_for('message', timeout=int(duration[1]) * 60.0, check=check_6)
+                                msg = await self.client.wait_for('message', timeout=(int(duration[1]) * 60.0) + 5, check=check_6)
                             except asyncio.TimeoutError:
                                 await ctx.send(f"Time up! Match ended! <@{ctx.message.author.id}> <@{usr.id}>")
                             else:

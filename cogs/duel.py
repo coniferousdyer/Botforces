@@ -66,8 +66,6 @@ class Duel(commands.Cog):
                 await ctx.send(":x: Sorry, the duel expired because 60 seconds were up!")
                 return
             else:
-                #------------USER VERIFICATION---------------#
-
                 await ctx.send("Starting duel...")
                 handles = msg.content.split()
 
