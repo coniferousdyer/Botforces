@@ -86,7 +86,6 @@ Keep in mind though, that if you close the terminal, the program will terminate 
 ## Future Plans/Issues
 
 * Contest Reminders
-* Switching to an SQLite3 database system to store data
 * Ensuring users get only unsolved problems to solve
 * Refactoring the code and distributing it for better maintainability
 
