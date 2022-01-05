@@ -60,8 +60,14 @@ $ pip install -r requirements.txt
 5. Create a file in the directory and name it `.env`. Take the token you copied earlier and paste it in place of `PASTE_TOKEN_HERE`. Then paste the following line in the `.env` file.
 
 ```bash
-DISCORD_TOKEN=PASTE_TOKEN_HERE
+DISCORD_TOKEN="<PASTE TOKEN HERE>"
 ```
+
+<b>Note: </b>For convenience, a `.env.template` file has been added. You can run the following command to create your `.env` file from the template.
+```bash
+cp .env.template .env
+```
+Then edit the created `.env` file and replace the `PASTE TOKEN HERE` with your token.
 
 You now have everything set up to run the bot.
 
@@ -76,7 +82,7 @@ $ deactivate
 In order to run your bot, you simply have to do this:
 
 ```bash
-$ python3 main.py
+$ python main.py
 ```
 
 You're all set! The bot should be online now. 
@@ -89,6 +95,6 @@ Keep in mind though, that if you close the terminal, the program will terminate 
 * Ensuring users get only unsolved problems to solve
 * Refactoring the code and distributing it for better maintainability
 
-<b>NOTE:</b> This is still in progress, and may not be complete. I'm open to PRs, so if you would like to change, improve or add something, feel free to make a PR!
+<b>NOTE:</b> I'm open to PRs, so if you would like to change, improve or add something, feel free to make a PR. Contributions are always welcome!
 
 

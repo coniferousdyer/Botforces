@@ -19,7 +19,7 @@ class Upcoming(commands.Cog):
         if ctx.message.author == self.client.user or ctx.message.author.bot:
             return
 
-        connection = sqlite3.connect("data/data.db")
+        connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
         contestList = cursor.execute("SELECT * from contests").fetchall()
 

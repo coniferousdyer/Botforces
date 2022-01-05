@@ -1,4 +1,3 @@
-from sqlite3.dbapi2 import connect
 import discord
 import aiohttp
 import asyncio
@@ -81,7 +80,7 @@ class Duel(commands.Cog):
                     tags.append(arg)
 
             # Opening data.db and reading the problems into a list
-            connection = sqlite3.connect("data/data.db")
+            connection = sqlite3.connect("data.db")
             cursor = connection.cursor()
             if rating != 0:
                 problemList = cursor.execute(
@@ -129,14 +128,11 @@ class Duel(commands.Cog):
 
             # Sending embed
             await ctx.send(embed=Embed)
-            connection.close()
 
             # Storing the start time of the duel
             startTime = datetime.datetime.now()
 
             # Storing the duel details in data.db
-            connection = sqlite3.connect("data/data.db")
-            cursor = connection.cursor()
             cursor.execute("INSERT INTO duels VALUES(?, ?, ?, ?, ?, ?, ?)",
                            (ctx.message.author.id, usr.id, startTime, problem[0], problem[1], handles[1], handles[2]))
             connection.commit()

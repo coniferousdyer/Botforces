@@ -1,5 +1,6 @@
-bot_env
 .env
 __pycache__
 *.pyc
 data.db
+venv
+logs

@@ -37,7 +37,7 @@ class Problem(commands.Cog):
                 tags.append(arg)
 
         # Opening data.db and reading the problems of rating (if mentioned) into a list
-        connection = sqlite3.connect("data/data.db")
+        connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
         if rating != 0:
             problemList = cursor.execute(
