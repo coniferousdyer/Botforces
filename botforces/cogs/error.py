@@ -5,9 +5,12 @@ class Error(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    # The error handler
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
+        """
+        The error handler.
+        """
+        
         message = ''
 
         if isinstance(error, commands.CommandNotFound):

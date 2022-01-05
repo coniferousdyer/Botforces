@@ -6,6 +6,8 @@ import random
 import datetime
 from discord.ext import commands, tasks
 
+from botforces.utils.constants import PROBLEM_WEBSITE_URL, SUBMISSION_URL
+
 
 class Lockout(commands.Cog):
     def __init__(self, client):
@@ -101,7 +103,7 @@ class Lockout(commands.Cog):
 
                             async with ctx.typing():
                                 # Opening data.db and reading the problems into a list
-                                connection = sqlite3.connect("data/data.db")
+                                connection = sqlite3.connect("data.db")
                                 cursor = connection.cursor()
 
                                 # Defining a string that contains the problems
@@ -128,7 +130,7 @@ class Lockout(commands.Cog):
 
                                         problems.append(problem)
 
-                                        problem_string += f"{count}. [{problem[2]} - {ratings[count]}](https://codeforces.com/problemset/problem/{problem[0]}/{problem[1]}) - {points[count]} points\n"
+                                        problem_string += f"{count}. [{problem[2]} - {ratings[count]}]({PROBLEM_WEBSITE_URL}{problem[0]}/{problem[1]}) - {points[count]} points\n"
                                         count += 1
 
                                 # Defining the 2-sized list which stores points of both users
@@ -176,8 +178,8 @@ class Lockout(commands.Cog):
                             async def checkSubmissions():
                                 async with aiohttp.ClientSession() as session:
                                     # Obtaining and comparing the last submissions of the two users
-                                    async with session.get(f'https://codeforces.com/api/user.status?handle={handles[1]}&from=1&count=1') as r1:
-                                        async with session.get(f'https://codeforces.com/api/user.status?handle={handles[2]}&from=1&count=1') as r2:
+                                    async with session.get(f'{SUBMISSION_URL}{handles[1]}&from=1&count=1') as r1:
+                                        async with session.get(f'{SUBMISSION_URL}{handles[2]}&from=1&count=1') as r2:
 
                                             # Saving the last submission in JSON form
                                             data_1 = await r1.json()
@@ -239,7 +241,7 @@ class Lockout(commands.Cog):
                                         problem_string = ''
                                         for problem in problems:
                                             if problem != None:
-                                                problem_string += f"{count}. [{problem[2]} - {ratings[count]}](https://codeforces.com/problemset/problem/{problem[0]}/{problem[1]}) - {points[count]} points\n"
+                                                problem_string += f"{count}. [{problem[2]} - {ratings[count]}]({PROBLEM_WEBSITE_URL}{problem[0]}/{problem[1]}) - {points[count]} points\n"
                                             else:
                                                 problem_string += f"{count}. Solved - {points[count]} points\n"
                                             count += 1

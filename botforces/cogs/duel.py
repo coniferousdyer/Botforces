@@ -6,6 +6,8 @@ import random
 import datetime
 from discord.ext import commands
 
+from botforces.utils.constants import PROBLEM_WEBSITE_URL, SUBMISSION_URL
+
 
 class Duel(commands.Cog):
     def __init__(self, client):
@@ -108,7 +110,7 @@ class Duel(commands.Cog):
 
             # Creating an embed
             Embed = discord.Embed(title=f"{problem[0]}{problem[1]}. {problem[2]}",
-                                  url=f"https://codeforces.com/problemset/problem/{problem[0]}/{problem[1]}",
+                                  url=f"{PROBLEM_WEBSITE_URL}{problem[0]}/{problem[1]}",
                                   description="The duel starts now!",
                                   color=0xff0000)
 
@@ -143,7 +145,7 @@ class Duel(commands.Cog):
     async def endduel(self, ctx):
 
         # Searching duels in data.db to find the one which message author is part of
-        connection = sqlite3.connect("data/data.db")
+        connection = sqlite3.connect("data.db")
         cursor = connection.cursor()
         duel = cursor.execute("SELECT * FROM duels WHERE user1_id = ? OR user2_id = ?",
                               (ctx.message.author.id, ctx.message.author.id)).fetchone()
@@ -157,8 +159,8 @@ class Duel(commands.Cog):
         async with aiohttp.ClientSession() as session:
             async with ctx.typing():
                 # Obtaining and comparing the last submissions of the two users
-                async with session.get(f'https://codeforces.com/api/user.status?handle={duel[5]}&from=1&count=1') as r1:
-                    async with session.get(f'https://codeforces.com/api/user.status?handle={duel[6]}&from=1&count=1') as r2:
+                async with session.get(f'{SUBMISSION_URL}{duel[5]}&from=1&count=1') as r1:
+                    async with session.get(f'{SUBMISSION_URL}{duel[6]}&from=1&count=1') as r2:
 
                         # Saving the last submission in JSON form
                         data_1 = await r1.json()

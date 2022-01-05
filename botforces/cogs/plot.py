@@ -1,9 +1,19 @@
-import discord
-import aiohttp
 import os
 from discord.ext import commands
-import matplotlib.pyplot as plt
-import numpy as np
+from collections import defaultdict
+
+from botforces.utils.api import get_user_submissions
+from botforces.utils.services import sort_dict_by_value
+from botforces.utils.graph import (
+    plot_rating_bar_chart,
+    plot_index_bar_chart,
+    plot_tags_bar_chart,
+)
+from botforces.utils.discord_common import (
+    create_rating_plot_embed,
+    create_index_plot_embed,
+    create_tags_plot_embed,
+)
 
 
 class Plot(commands.Cog):
@@ -13,6 +23,9 @@ class Plot(commands.Cog):
     # Command to display the plot of problems solved by a user according to rating
     @commands.command()
     async def plotrating(self, ctx, handle=None):
+        """
+        Displays the plot of number of problems solved by a user according to rating.
+        """
 
         # Checking if the author was a bot
         if ctx.message.author == self.client.user or ctx.message.author.bot:
@@ -23,218 +36,112 @@ class Plot(commands.Cog):
             return
 
         async with ctx.typing():
-            async with aiohttp.ClientSession() as session:
-                async with session.get(f'https://codeforces.com/api/user.status?handle={handle}') as r:
+            problemList = await get_user_submissions(ctx, handle)
+            problemList = list(
+                filter(lambda problem: problem["verdict"] == "OK", problemList)
+            )
 
-                    # If the user was not found
-                    if not r.ok:
-                        await ctx.send(f":x: Sorry, user with handle {handle} could not be found.")
-                        return
+            resDict = defaultdict(int)
+            unique_map = {}
 
-                    # Reading the data as JSON data and storing the dictionary in data variable
-                    data = await r.json()
-                    problemList = data["result"]
+            for problem in problemList:
+                if "rating" in problem["problem"]:
+                    # Ensuring that the problem is not a duplicate
+                    if problem["problem"]["name"] not in unique_map:
+                        unique_map[problem["problem"]["name"]] = True
+                        rating = problem["problem"]["rating"]
+                        resDict[str(rating)] += 1
 
-                    # Checking submissions
-                    pDict = dict({})
+            if not resDict:
+                await ctx.send(f"{handle} has not solved any problems!")
+                return
 
-                    for problem in problemList:
-                        if problem["verdict"] == "OK":
-                            if "rating" in problem["problem"]:
-                                pDict[problem["problem"]["name"]
-                                      ] = problem["problem"]["rating"]
-
-                    if not pDict:
-                        await ctx.send(f"{handle} has not solved any problems!")
-                        return
-
-                    resDict = dict({})
-
-                    for rating in pDict.values():
-                        resDict[str(rating)] = resDict.get(str(rating), 0) + 1
-
-                    resDict = dict(sorted(resDict.items(), key=lambda x: x[1]))
-
-                    # Plotting graph
-                    x = np.array(list(resDict.keys()))
-                    y = np.array(list(resDict.values()))
-
-                    plt.clf()
-                    plt.bar(x, y)
-                    plt.xticks(fontsize=7, rotation=45)
-                    plt.xlabel("Rating", fontsize=7)
-                    plt.ylabel("Number", fontsize=7)
-
-                    for i in range(len(y)):
-                        plt.annotate(str(y[i]), xy=(x[i], y[i]),
-                                     ha='center', va='bottom').set_fontsize(7)
-
-                    # Saving file temporarily
-                    plt.savefig("figure.png")
-                    File = discord.File("figure.png")
-
-                    # Creating an embed
-                    Embed = discord.Embed(
-                        title=f"{handle}'s solved problems",
-                        description="Note: ? refers to problems that do not have a rating on Codeforces.",
-                        color=0xff0000)
-                    Embed.set_image(url="attachment://figure.png")
-
-                    Embed.set_footer(icon_url=ctx.author.avatar_url,
-                                     text=str(ctx.author))
+            resDict = sort_dict_by_value(resDict)
+            File = plot_rating_bar_chart(resDict)
+            Embed = create_rating_plot_embed(handle, ctx.author)
 
         # Sending embed
         await ctx.send(file=File, embed=Embed)
-
-        # Deleting temporary file
         os.remove("figure.png")
 
     # Command to display the plot of problems solved by a user according to index
     @commands.command()
     async def plotindex(self, ctx, handle=None):
+        """
+        Displays the plot of number of problems solved by a user according to index.
+        """
 
         if handle == None:
             await ctx.send(":x: Please provide a handle.")
             return
 
-        async with ctx.typing():
-            async with aiohttp.ClientSession() as session:
-                async with session.get(f'https://codeforces.com/api/user.status?handle={handle}') as r:
+        problemList = await get_user_submissions(ctx, handle)
+        problemList = list(
+            filter(lambda problem: problem["verdict"] == "OK", problemList)
+        )
 
-                    # If the user was not found
-                    if not r.ok:
-                        await ctx.send(f":x: Sorry, user with handle {handle} could not be found.")
-                        return
+        resDict = defaultdict(int)
+        unique_map = {}
 
-                    # Reading the data as JSON data and storing the dictionary in data variable
-                    data = await r.json()
-                    problemList = data["result"]
+        for problem in problemList:
+            if "index" in problem["problem"]:
+                # Ensuring that the problem is not a duplicate
+                if problem["problem"]["name"] not in unique_map:
+                    unique_map[problem["problem"]["name"]] = True
+                    index = problem["problem"]["index"][0]
+                    resDict[index] += 1
 
-                    # Checking submissions
-                    pDict = dict({})
+        if not resDict:
+            await ctx.send(f"{handle} has not solved any problems!")
+            return
 
-                    for problem in problemList:
-                        if problem["verdict"] == "OK":
-                            # Reducing the index to only the first character
-                            if len(problem["problem"]["index"]) > 1:
-                                problem["problem"]["index"] = problem["problem"]["index"][0]
-
-                            pDict[problem["problem"]["name"]
-                                  ] = problem["problem"]["index"]
-
-                    if not pDict:
-                        await ctx.send(f"{handle} has not solved any problems!")
-                        return
-
-                    resDict = dict({})
-
-                    for index in pDict.values():
-                        resDict[index] = resDict.get(index, 0) + 1
-
-                    resDict = dict(sorted(resDict.items(), key=lambda x: x[1]))
-
-                    # Plotting graph
-                    x = np.array(list(resDict.keys()))
-                    y = np.array(list(resDict.values()))
-
-                    plt.clf()
-                    plt.bar(x, y, color="green")
-                    plt.xticks(fontsize=7)
-                    plt.xlabel("Index", fontsize=7)
-                    plt.ylabel("Number", fontsize=7)
-
-                    for i in range(len(y)):
-                        plt.annotate(str(y[i]), xy=(x[i], y[i]),
-                                     ha='center', va='bottom').set_fontsize(7)
-
-                    # Saving file temporarily
-                    plt.savefig("figure.png")
-                    File = discord.File("figure.png")
-
-                    # Creating an embed
-                    Embed = discord.Embed(
-                        title=f"{handle}'s solved problems", color=0xff0000)
-                    Embed.set_image(url="attachment://figure.png")
-
-                    Embed.set_footer(icon_url=ctx.author.avatar_url,
-                                     text=str(ctx.author))
+        resDict = sort_dict_by_value(resDict)
+        File = plot_index_bar_chart(resDict)
+        Embed = create_index_plot_embed(handle, ctx.author)
 
         # Sending embed
         await ctx.send(file=File, embed=Embed)
-
-        # Deleting temporary file
         os.remove("figure.png")
 
     # Command to display the plot of problems solved by a user according to tags
     @commands.command()
     async def plottags(self, ctx, handle=None):
+        """
+        Displays the plot of number of problems solved by a user according to tags.
+        """
 
         if handle == None:
             await ctx.send(":x: Please provide a handle.")
             return
 
         async with ctx.typing():
-            async with aiohttp.ClientSession() as session:
-                async with session.get(f'https://codeforces.com/api/user.status?handle={handle}') as r:
+            problemList = await get_user_submissions(ctx, handle)
+            problemList = list(
+                filter(lambda problem: problem["verdict"] == "OK", problemList)
+            )
 
-                    # If the user was not found
-                    if not r.ok:
-                        await ctx.send(f":x: Sorry, user with handle {handle} could not be found.")
-                        return
+            resDict = defaultdict(int)
+            unique_map = {}
 
-                    # Reading the data as JSON data and storing the dictionary in data variable
-                    data = await r.json()
-                    problemList = data["result"]
+            for problem in problemList:
+                if "tags" in problem["problem"]:
+                    # Ensuring that the problem is not a duplicate
+                    if problem["problem"]["name"] not in unique_map:
+                        unique_map[problem["problem"]["name"]] = True
+                        tags = problem["problem"]["tags"]
+                        for tag in tags:
+                            resDict[tag] += 1
 
-                    # Checking submissions
-                    pDict = dict({})
+            if not resDict:
+                await ctx.send(f"{handle} has not solved any problems!")
+                return
 
-                    for problem in problemList:
-                        if problem["verdict"] == "OK":
-                            pDict[problem["problem"]["name"]
-                                  ] = problem["problem"]["tags"]
-
-                    if not pDict:
-                        await ctx.send(f"{handle} has not solved any problems!")
-                        return
-
-                    resDict = dict({})
-
-                    for tagList in pDict.values():
-                        for tag in tagList:
-                            resDict[tag] = resDict.get(tag, 0) + 1
-
-                    resDict = dict(sorted(resDict.items(), key=lambda x: x[1]))
-
-                    # Plotting graph
-                    x = np.array(list(resDict.keys()))
-                    y = np.array(list(resDict.values()))
-
-                    plt.clf()
-                    plt.bar(x, y, color="red")
-                    plt.xticks(fontsize=7, rotation=90)
-                    plt.ylabel("Number", fontsize=7)
-
-                    for i in range(len(y)):
-                        plt.annotate(str(y[i]), xy=(x[i], y[i]),
-                                     ha='center', va='bottom').set_fontsize(7)
-
-                    # Saving file temporarily
-                    plt.savefig("figure.png")
-                    File = discord.File("figure.png")
-
-                    # Creating an embed
-                    Embed = discord.Embed(
-                        title=f"{handle}'s solved problems", color=0xff0000)
-                    Embed.set_image(url="attachment://figure.png")
-
-                    Embed.set_footer(icon_url=ctx.author.avatar_url,
-                                     text=str(ctx.author))
+            resDict = sort_dict_by_value(resDict)
+            File = plot_tags_bar_chart(resDict)
+            Embed = create_tags_plot_embed(handle, ctx.author)
 
         # Sending embed
         await ctx.send(file=File, embed=Embed)
-
-        # Deleting temporary file
         os.remove("figure.png")
 
     @commands.Cog.listener()

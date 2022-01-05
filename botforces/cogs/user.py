@@ -1,6 +1,8 @@
-import discord
-import aiohttp
 from discord.ext import commands
+
+from botforces.utils.api import get_user_by_handle
+from botforces.utils.discord_common import create_user_embed
+from botforces.utils.services import map_rank_to_color
 
 
 class User(commands.Cog):
@@ -10,69 +12,33 @@ class User(commands.Cog):
     # Command to search for a user and display their basic details
     @commands.command()
     async def user(self, ctx, handle):
+        """
+        Searches for a user and displays their basic details.
+        """
 
         # Checking if the author was a bot
         if ctx.message.author == self.client.user or ctx.message.author.bot:
             return
-            
+
+        # Displays the "typing..." message while the data is being fetched
         async with ctx.typing():
-            async with aiohttp.ClientSession() as session:
-                async with session.get(f'https://codeforces.com/api/user.info?handles={handle}') as r:
+            user = await get_user_by_handle(ctx, handle)
+            if not user:
+                await ctx.send(
+                    f":x: Sorry, user with handle {handle} could not be found."
+                )
+                return
 
-                    # If the user was not found
-                    if not r.ok:
-                        await ctx.send(f":x: Sorry, user with handle {handle} could not be found.")
-                        return
+            # Assigning a color according to rank
+            if "rank" in user:
+                rank = user["rank"]
+            else:
+                rank = None
 
-                    # Reading the data as JSON data and storing the dictionary in data variable
-                    data = await r.json()
+            color = map_rank_to_color(rank)
 
-                    # Assigning a color according to rank
-
-                    color = 0xff0000
-                    if "rank" not in data["result"][0]:
-                        color = 0x000000
-                    elif data["result"][0]["rank"] == "newbie":
-                        color = 0x918f8e
-                    elif data["result"][0]["rank"] == "pupil":
-                        color = 0x087515
-                    elif data["result"][0]["rank"] == "specialist":
-                        color = 0x1af2f2
-                    elif data["result"][0]["rank"] == "expert":
-                        color = 0x1300f9
-                    elif data["result"][0]["rank"] == "candidate master":
-                        color = 0xb936ee
-                    elif data["result"][0]["rank"] == "master" or data["result"][0]["rank"] == "international master":
-                        color = 0xeebb36
-
-                    # Creating an embed
-                    Embed = discord.Embed(title=data["result"][0]["handle"],
-                                          url=f"https://codeforces.com/profile/{data['result'][0]['handle']}",
-                                          color=color)
-
-                    Embed.set_thumbnail(url=data["result"][0]["avatar"])
-
-                    if 'firstName' in data["result"][0] and 'lastName' in data["result"][0]:
-                        Embed.add_field(
-                            name="Name", value=data["result"][0]["firstName"] + ' ' + data["result"][0]["lastName"], inline=False)
-
-                    if 'city' in data["result"][0] and 'country' in data["result"][0]:
-                        Embed.add_field(
-                            name="City", value=data["result"][0]["city"] + ', ' + data["result"][0]["country"], inline=False)
-
-                    if "rank" in data["result"][0]:
-                        Embed.add_field(
-                            name="Rank", value=data["result"][0]["rank"].title(), inline=False)
-                    else:
-                        Embed.add_field(
-                            name="Rank", value="Unranked", inline=False)
-
-                    if "rating" in data["result"][0]:
-                        Embed.add_field(name="Rating",
-                                        value=data["result"][0]["rating"], inline=False)
-
-                    Embed.set_footer(icon_url=ctx.author.avatar_url,
-                                     text=str(ctx.author))
+            # Creating an embed
+            Embed = create_user_embed(user, ctx.author, color)
 
         # Sending the embed
         await ctx.send(embed=Embed)
