@@ -63,9 +63,11 @@ async def get_users_last_submission(ctx, duel):
     """
     async with ctx.typing():
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"{SUBMISSION_URL}{duel[5]}&from=1&count=1") as r1:
+            async with session.get(
+                f"{SUBMISSION_URL}{duel['handle_1']}&from=1&count=1"
+            ) as r1:
                 async with session.get(
-                    f"{SUBMISSION_URL}{duel[6]}&from=1&count=1"
+                    f"{SUBMISSION_URL}{duel['handle_2']}&from=1&count=1"
                 ) as r2:
                     data_1 = await r1.json()
                     data_2 = await r2.json()

@@ -93,7 +93,6 @@ Keep in mind though, that if you close the terminal, the program will terminate 
 
 * Contest Reminders
 * Ensuring users get only unsolved problems to solve
-* Refactoring the code and distributing it for better maintainability
 
 <b>NOTE:</b> I'm open to PRs, so if you would like to change, improve or add something, feel free to make a PR. Contributions are always welcome!
 

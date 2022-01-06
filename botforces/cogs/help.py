@@ -23,7 +23,6 @@ class Help(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    # Command to display all commands (and optionally, descriptions of what they do)
     @commands.command()
     async def help(self, ctx, cmd=None):
 
@@ -32,7 +31,7 @@ class Help(commands.Cog):
             return
 
         # If no parameter was provided
-        if cmd == None:
+        if cmd is None:
             Embed = await create_general_help_embed(ctx.author)
             await ctx.send(embed=Embed)
 

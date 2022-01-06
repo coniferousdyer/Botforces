@@ -15,7 +15,6 @@ class User(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    # Command to search for a user and display their basic details
     @commands.command()
     async def user(self, ctx, handle):
         """

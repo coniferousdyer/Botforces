@@ -26,7 +26,7 @@ class Stalk(commands.Cog):
         if ctx.message.author == self.client.user or ctx.message.author.bot:
             return
 
-        if handle == None:
+        if handle is None:
             await ctx.send(":x: Please provide a handle.")
             return
 

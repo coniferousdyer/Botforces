@@ -7,7 +7,12 @@ import discord
 import datetime
 import time
 
-from botforces.utils.constants import USER_WEBSITE_URL, PROBLEM_WEBSITE_URL
+from botforces.utils.constants import (
+    NUMBER_OF_ACS,
+    USER_WEBSITE_URL,
+    PROBLEM_WEBSITE_URL,
+)
+from botforces.utils.services import enclose_tags_in_spoilers
 
 
 """
@@ -74,19 +79,16 @@ async def create_problem_embed(problem, author):
     """
 
     Embed = discord.Embed(
-        title=f"{problem[0]}{problem[1]}. {problem[2]}",
-        url=f"{PROBLEM_WEBSITE_URL}{problem[0]}/{problem[1]}",
+        title=f"{problem['contestId']}{problem['contestIndex']}. {problem['name']}",
+        url=f"{PROBLEM_WEBSITE_URL}{problem['contestId']}/{problem['contestIndex']}",
         color=0xFF0000,
     )
 
     Embed.add_field(name="Rating", value=problem[4], inline=False)
 
     # Printing the tags in spoilers
-    if problem[3] != "[]":
-        tags = problem[3].split(", ")
-        tags = [tag.strip("[]'") for tag in tags]
-        tags = map(lambda str: "||" + str + "||", tags)
-        tags = ",".join(tags)
+    if problem["tags"] != "[]":
+        tags = await enclose_tags_in_spoilers(problem["tags"])
         Embed.add_field(name="Tags", value=tags)
 
     Embed.set_footer(icon_url=author.avatar_url, text=str(author))
@@ -109,32 +111,18 @@ async def create_contest_embed(contestList, author):
     # Adding each contest as a field to the embed
     for contest in contestList:
 
-        # Obtaining the time of the contest (dateList[0] -> date, dateList[1] -> time)
-        date = str(datetime.datetime.fromtimestamp(contest[3]))
-        dateList = date.split()
-        dateList[0] = dateList[0].split("-")
-        dateList[1] = dateList[1].split(":")
-
-        # dateList[i][0] -> year/hour
-        # dateList[i][1] -> month/minute
-        # dateList[i][2] -> day/second
-        date = datetime.datetime(
-            int(dateList[0][0]),
-            int(dateList[0][1]),
-            int(dateList[0][2]),
-            int(dateList[1][0]),
-            int(dateList[1][1]),
-            int(dateList[1][2]),
-        )
+        # Obtaining the start time of the contest
+        date = datetime.datetime.fromtimestamp(contest["startTimeSeconds"])
         dateString = date.strftime("%b %d, %Y, %H:%M")
 
         # Obtaining contest duration
-        duration = str(datetime.timedelta(seconds=contest[2]))
-        duration = duration.split(":")
+        duration = datetime.timedelta(seconds=contest["durationSeconds"])
+        hours = duration.seconds // 3600
+        minutes = (duration.seconds // 60) % 60
 
         Embed.add_field(
-            name=contest[1],
-            value=f"{contest[0]} - {dateString} {time.tzname[0]} - {duration[0]} hrs, {duration[1]} mins",
+            name=contest["name"],
+            value=f"{contest['id']} - {dateString} {time.tzname[0]} - {hours} hrs, {minutes} mins",
             inline=False,
         )
 
@@ -286,12 +274,12 @@ async def create_stalk_help_embed(author):
 
     Embed = discord.Embed(
         title="stalk",
-        description="Displays the last n problems solved by a user (10 by default).",
+        description=f"Displays the last n problems solved by a user ({NUMBER_OF_ACS} by default).",
         color=0xFF0000,
     )
     Embed.add_field(
         name="Syntax",
-        value="`-stalk <codeforces_handle>` - Displays last 10 submissions of the user\n`-stalk <codeforces_handle> <n>` - Displays last n submissions of the user",
+        value=f"`-stalk <codeforces_handle>` - Displays last {NUMBER_OF_ACS} submissions of the user\n`-stalk <codeforces_handle> <n>` - Displays last n submissions of the user",
     )
     Embed.set_footer(icon_url=author.avatar_url, text=str(author))
 
@@ -419,20 +407,17 @@ async def create_duel_begin_embed(problem, author, opponent):
     """
 
     Embed = discord.Embed(
-        title=f"{problem[0]}{problem[1]}. {problem[2]}",
-        url=f"{PROBLEM_WEBSITE_URL}{problem[0]}/{problem[1]}",
+        title=f"{problem['contestId']}{problem['contestIndex']}. {problem['name']}",
+        url=f"{PROBLEM_WEBSITE_URL}{problem['contestId']}/{problem['contestIndex']}",
         description="The duel starts now!",
         color=0xFF0000,
     )
 
-    Embed.add_field(name="Rating", value=problem[4], inline=False)
+    Embed.add_field(name="Rating", value=problem["rating"], inline=False)
 
     # Printing the tags in spoilers
-    if problem[3] != "[]":
-        tags = problem[3].split(", ")
-        tags = [tag.strip("[]'") for tag in tags]
-        tags = map(lambda str: "||" + str + "||", tags)
-        tags = ",".join(tags)
+    if problem["tags"] != "[]":
+        tags = await enclose_tags_in_spoilers(problem["tags"])
         Embed.add_field(name="Tags", value=tags)
 
     Embed.add_field(
@@ -456,12 +441,12 @@ async def create_duels_embed(duels):
 
     # Adding fields to embed
     for duel in duels:
-        date = datetime.datetime.strptime(duel[2], "%Y-%m-%d %H:%M:%S.%f").strftime(
-            "%b %d, %Y %H:%M:%S"
-        )
+        date = datetime.datetime.strptime(
+            duel["startTime"], "%Y-%m-%d %H:%M:%S.%f"
+        ).strftime("%b %d, %Y %H:%M:%S")
         Embed.add_field(
-            name=f"{duel[5]} vs {duel[6]}",
-            value=f"Problem: {PROBLEM_WEBSITE_URL}{duel[3]}/{duel[4]}\nStart Time: {date} {time.tzname[0]}",
+            name=f"{duel['handle_1']} vs {duel['handle_2']}",
+            value=f"Problem: {PROBLEM_WEBSITE_URL}{duel['contestId']}/{duel['contestIndex']}\nStart Time: {date} {time.tzname[0]}",
             inline=False,
         )
 

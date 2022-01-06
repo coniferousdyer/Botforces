@@ -14,7 +14,6 @@ class Upcoming(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    # Command to display upcoming contests
     @commands.command()
     async def upcoming(self, ctx):
         """

@@ -18,7 +18,11 @@ from botforces.utils.db import (
     remove_duel_from_db,
 )
 from botforces.utils.discord_common import create_duel_begin_embed, create_duels_embed
-from botforces.utils.services import decide_verdict, separate_rating_and_tags
+from botforces.utils.services import (
+    decide_verdict,
+    separate_rating_and_tags,
+    verify_handles,
+)
 
 
 class Duel(commands.Cog):
@@ -26,7 +30,7 @@ class Duel(commands.Cog):
         self.client = client
 
     @commands.command()
-    async def duel(self, ctx, usr: discord.User = None, *args):
+    async def duel(self, ctx, opponent: discord.User = None, *args):
         """
         Performs pre-duel actions, suggests a random problem to a user and begins the duel.
         """
@@ -36,21 +40,26 @@ class Duel(commands.Cog):
             return
 
         # Checking if a user was mentioned
-        if usr == None:
+        if opponent is None:
             await ctx.send(":x: Please mention whom you want to duel.")
             return
 
-        if usr.bot or usr == self.client.user:
+        if opponent.bot or opponent == self.client.user:
             await ctx.send(":x: You can't duel a bot.")
             return
 
         # Checking if the user mentioned themselves
-        if usr == ctx.author:
+        if opponent == ctx.author:
             await ctx.send(":x: You can't duel yourself.")
             return
 
+        # Checking if the user is already in a duel
+        if await get_duel_from_db(ctx.author) is not None:
+            await ctx.send(":x: You are already in a duel!")
+            return
+
         reactMsg = await ctx.send(
-            f"<@{usr.id}>, react to this message with :thumbsup: within 60 seconds to accept the duel."
+            f"<@{opponent.id}>, react to this message with :thumbsup: within 30 seconds to accept the duel."
         )
 
         # Waiting for the reaction
@@ -58,7 +67,7 @@ class Duel(commands.Cog):
             await self.client.wait_for(
                 "reaction_add",
                 timeout=30.0,
-                check=lambda reaction, user: user == usr
+                check=lambda reaction, user: user == opponent
                 and str(reaction.emoji) == "\N{THUMBS UP SIGN}"
                 and reactMsg.id == reaction.message.id,
             )
@@ -67,7 +76,7 @@ class Duel(commands.Cog):
             return
         else:
             await ctx.send(
-                f"<@{usr.id}> has accepted the duel! Send handles of <@{ctx.message.author.id}> and <@{usr.id}> respectively like this within the next 60 seconds:\n```handles <handle of {ctx.author.display_name}> <handle of {usr.display_name}>```"
+                f"<@{opponent.id}> has accepted the duel! Send handles of <@{ctx.message.author.id}> and <@{opponent.id}> respectively like this within the next 60 seconds:\n```handles <handle of {ctx.author.display_name}> <handle of {opponent.display_name}>```"
             )
 
             try:
@@ -76,7 +85,7 @@ class Duel(commands.Cog):
                     timeout=60.0,
                     check=lambda m: m.content.startswith("handles")
                     and m.channel == reactMsg.channel
-                    and (m.author == usr or m.author == ctx.message.author)
+                    and (m.author == opponent or m.author == ctx.message.author)
                     and len(m.content.split()) == 3,
                 )
             except asyncio.TimeoutError:
@@ -85,8 +94,15 @@ class Duel(commands.Cog):
                 )
                 return
             else:
-                await ctx.send("Starting duel...")
                 handles = msg.content.split()
+                verified = await verify_handles(ctx, handles[1], handles[2])
+                if not verified:
+                    await ctx.send(
+                        ":x: Sorry, the duel expired because at least one of the handles is invalid!"
+                    )
+                    return
+
+                await ctx.send("Starting duel...")
 
             # Opening data.db and reading the problems into a list
             rating, tags = await separate_rating_and_tags(args)
@@ -101,9 +117,11 @@ class Duel(commands.Cog):
 
             # Storing problem
             problem = problemList[random.randint(0, len(problemList) - 1)]
-            Embed = await create_duel_begin_embed(problem, ctx.author, usr)
+            Embed = await create_duel_begin_embed(problem, ctx.author, opponent)
             await ctx.send(embed=Embed)
-            await store_duel(problem, ctx.message.author, usr, handles)
+            await store_duel(
+                problem, ctx.message.author, opponent, handles[1], handles[2]
+            )
 
     @commands.command()
     async def endduel(self, ctx):
@@ -115,7 +133,7 @@ class Duel(commands.Cog):
         duel = await get_duel_from_db(ctx.message.author)
 
         # If no duel with the user was found
-        if duel == None:
+        if duel is None:
             await ctx.send(":x: You are not taking part in a duel currently!")
             return
 
@@ -134,25 +152,33 @@ class Duel(commands.Cog):
                 user_submission["creationTimeSeconds"]
                 <= opponent_submission["creationTimeSeconds"]
             ):
-                await ctx.send(f"<@{duel[0]}> has won the duel against <@{duel[1]}>!")
+                await ctx.send(
+                    f"<@{duel['user1_id']}> has won the duel against <@{duel['user2_id']}>!"
+                )
             else:
-                await ctx.send(f"<@{duel[1]}> has won the duel against <@{duel[0]}>!")
+                await ctx.send(
+                    f"<@{duel['user2_id']}> has won the duel against <@{duel['user1_id']}>!"
+                )
 
         # If only user_1 solved the problem
         elif user_solved:
-            await ctx.send(f"<@{duel[0]}> has won the duel against <@{duel[1]}>!")
+            await ctx.send(
+                f"<@{duel['user1_id']}> has won the duel against <@{duel['user2_id']}>!"
+            )
 
         # If only user_2 solved the problem
         elif opponent_solved:
-            await ctx.send(f"<@{duel[1]}> has won the duel against <@{duel[0]}>!")
+            await ctx.send(
+                f"<@{duel['user2_id']}> has won the duel against <@{duel['user1_id']}>!"
+            )
 
         # If neither solved the problem
         else:
             opponentID = None
-            if ctx.message.author.id == duel[0]:
-                opponentID = duel[1]
+            if ctx.message.author.id == duel["user1_id"]:
+                opponentID = duel["user2_id"]
             else:
-                opponentID = duel[0]
+                opponentID = duel["user1_id"]
 
             reactMsg = await ctx.send(
                 f"<@{opponentID}>, react to this message with :thumbsup: within 30 seconds to invalidate the duel."

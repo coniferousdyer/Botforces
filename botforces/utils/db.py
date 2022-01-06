@@ -1,10 +1,10 @@
-import aiosqlite
-import datetime
-
 """
 The DB module interacts with the database, storing, retrieving and deleting data.
 """
 
+
+import aiosqlite
+import datetime
 
 from botforces.utils.services import check_tags
 
@@ -22,7 +22,7 @@ async def create_duels_table():
     connection = await aiosqlite.connect("data.db")
     await connection.execute("DROP TABLE IF EXISTS duels")
     await connection.execute(
-        "CREATE TABLE duels(user1_id BIGINT, user2_id BIGINT, startTime DATETIME, contestId INTEGER, contestIndex TEXT, handle1 TEXT, handle2 TEXT)"
+        "CREATE TABLE duels(user1_id BIGINT, user2_id BIGINT, startTime DATETIME, contestId INTEGER, contestIndex TEXT, handle_1 TEXT, handle_2 TEXT)"
     )
     await connection.commit()
     await connection.close()
@@ -61,7 +61,7 @@ Database insertion functions.
 """
 
 
-async def store_duel(problem, user1, user2, handles):
+async def store_duel(problem, user1, user2, handle_1, handle_2):
     """
     Stores the duel in the database.
     """
@@ -76,10 +76,10 @@ async def store_duel(problem, user1, user2, handles):
             user1.id,
             user2.id,
             startTime,
-            problem[0],
-            problem[1],
-            handles[1],
-            handles[2],
+            problem["contestId"],
+            problem["contestIndex"],
+            handle_1,
+            handle_2,
         ),
     )
     await connection.commit()
@@ -136,6 +136,7 @@ async def get_problems_from_db(rating, tags):
     """
 
     connection = await aiosqlite.connect("data.db")
+    connection.row_factory = aiosqlite.Row
 
     # Reading the problems of rating (if mentioned) into a list
     if rating != 0:
@@ -151,7 +152,7 @@ async def get_problems_from_db(rating, tags):
     finalList = []
     if tags != []:
         for problem in problemList:
-            if await check_tags(problem[3], tags):
+            if await check_tags(problem["tags"], tags):
                 finalList.append(problem)
 
         problemList = finalList
@@ -168,6 +169,7 @@ async def get_contests_from_db():
     """
 
     connection = await aiosqlite.connect("data.db")
+    connection.row_factory = aiosqlite.Row
     cursor = await connection.execute("SELECT * from contests")
     contestList = await cursor.fetchall()
     await cursor.close()
@@ -182,6 +184,7 @@ async def get_duel_from_db(user_requesting):
     """
 
     connection = await aiosqlite.connect("data.db")
+    connection.row_factory = aiosqlite.Row
     cursor = await connection.execute(
         "SELECT * FROM duels WHERE user1_id = ? OR user2_id = ?",
         (user_requesting.id, user_requesting.id),
@@ -200,6 +203,7 @@ async def get_duels_from_db():
     """
 
     connection = await aiosqlite.connect("data.db")
+    connection.row_factory = aiosqlite.Row
     cursor = await connection.execute("SELECT * FROM duels")
     duels = await cursor.fetchall()
 
@@ -209,6 +213,11 @@ async def get_duels_from_db():
     return duels
 
 
+"""
+Database deletion functions.
+"""
+
+
 async def remove_duel_from_db(duel):
     """
     Removes the duel from the database.
@@ -216,8 +225,8 @@ async def remove_duel_from_db(duel):
 
     connection = await aiosqlite.connect("data.db")
     await connection.execute(
-        "DELETE FROM duels WHERE user1_id = ? AND user2_id = ? AND startTime = ? AND contestId = ? AND contestIndex = ? AND handle1 = ? AND handle2 = ?",
-        (duel[0], duel[1], duel[2], duel[3], duel[4], duel[5], duel[6]),
+        "DELETE FROM duels WHERE user1_id = ? AND user2_id = ?",
+        (duel["user1_id"], duel["user2_id"]),
     )
     await connection.commit()
     await connection.close()

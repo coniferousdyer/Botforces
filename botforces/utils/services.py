@@ -5,6 +5,7 @@ Contains service and utility functions for cogs.
 
 import datetime
 
+from botforces.utils.api import get_user_by_handle
 from botforces.utils.constants import PROBLEM_WEBSITE_URL
 
 
@@ -51,6 +52,32 @@ async def check_tags(problem_tags, tags):
             count += 1
 
     return count == len(tags)
+
+
+async def enclose_tags_in_spoilers(tags):
+    """
+    Encloses the tags in spoilers and returns the resultant string.
+    """
+
+    tags = tags.split(", ")
+    tags = [tag.strip("[]'") for tag in tags]
+    tags = map(lambda str: "||" + str + "||", tags)
+    tags = ",".join(tags)
+
+    return tags
+
+
+async def verify_handles(ctx, handle_1, handle_2):
+    """
+    Verifies if the handles are valid.
+    """
+
+    if await get_user_by_handle(ctx, handle_1) and await get_user_by_handle(
+        ctx, handle_2
+    ):
+        return True
+    else:
+        return False
 
 
 async def separate_rating_and_tags(args):
@@ -119,18 +146,18 @@ async def decide_verdict(duel, user_submission, opponent_submission):
         opponent_submission["creationTimeSeconds"]
     )
 
-    startTime = datetime.datetime.strptime(duel[2], "%Y-%m-%d %H:%M:%S.%f")
+    startTime = datetime.datetime.strptime(duel["startTime"], "%Y-%m-%d %H:%M:%S.%f")
     if (
-        duel[3] == user_submission["problem"]["contestId"]
+        duel["contestId"] == user_submission["problem"]["contestId"]
         and user_submission["creationTimeSeconds"] > startTime
-        and duel[4] == user_submission["problem"]["index"]
+        and duel["contestIndex"] == user_submission["problem"]["index"]
         and user_submission["verdict"] == "OK"
     ):
         user_solved = True
     if (
-        duel[3] == opponent_submission["problem"]["contestId"]
+        duel["contestId"] == opponent_submission["problem"]["contestId"]
         and opponent_submission["creationTimeSeconds"] > startTime
-        and duel[4] == opponent_submission["problem"]["index"]
+        and duel["contestIndex"] == opponent_submission["problem"]["index"]
         and opponent_submission["verdict"] == "OK"
     ):
         opponent_solved = True

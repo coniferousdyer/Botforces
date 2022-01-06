@@ -26,7 +26,6 @@ class Plot(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    # Command to display the plot of problems solved by a user according to rating
     @commands.command()
     async def plotrating(self, ctx, handle=None):
         """
@@ -37,7 +36,7 @@ class Plot(commands.Cog):
         if ctx.message.author == self.client.user or ctx.message.author.bot:
             return
 
-        if handle == None:
+        if handle is None:
             await ctx.send(":x: Please provide a handle.")
             return
 
@@ -70,14 +69,13 @@ class Plot(commands.Cog):
         await ctx.send(file=File, embed=Embed)
         os.remove("figure.png")
 
-    # Command to display the plot of problems solved by a user according to index
     @commands.command()
     async def plotindex(self, ctx, handle=None):
         """
         Displays the plot of number of problems solved by a user according to index.
         """
 
-        if handle == None:
+        if handle is None:
             await ctx.send(":x: Please provide a handle.")
             return
 
@@ -109,14 +107,13 @@ class Plot(commands.Cog):
         await ctx.send(file=File, embed=Embed)
         os.remove("figure.png")
 
-    # Command to display the plot of problems solved by a user according to tags
     @commands.command()
     async def plottags(self, ctx, handle=None):
         """
         Displays the plot of number of problems solved by a user according to tags.
         """
 
-        if handle == None:
+        if handle is None:
             await ctx.send(":x: Please provide a handle.")
             return
 
