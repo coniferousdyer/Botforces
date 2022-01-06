@@ -9,6 +9,7 @@ from discord.ext import tasks, commands
 from dotenv import load_dotenv
 import logging
 from logging.handlers import RotatingFileHandler
+from discord_sentry_reporting import use_sentry
 
 from botforces.utils.api import get_all_problems, get_all_upcoming_contests
 from botforces.utils.db import (
@@ -53,6 +54,9 @@ async def on_ready():
         level=logging.INFO,
     )
 
+    # Setting up Sentry
+    use_sentry(client, dsn=os.getenv("SENTRY_DSN"))
+
     # Setting the bot activity on Discord
     await client.change_presence(activity=discord.Game(name="Codeforces"))
     update_db.start()
@@ -73,14 +77,14 @@ async def update_db():
     # Obtaining the list of all upcoming contests
     contests = await get_all_upcoming_contests()
 
-    logging.info(f"Updated contests.")
-
     # Storing the contests in the database
     for contest in contests:
         if contest["phase"] == "BEFORE":
             await store_contest(contest)
         else:
             break
+
+    logging.info("Updated contests.")
 
     # Obtaining the list of all rated problems
     problems = await get_all_problems()
@@ -89,7 +93,7 @@ async def update_db():
     for problem in problems:
         await store_problem(problem)
 
-    logging.info(f"Updated problems.")
+    logging.info("Updated problems.")
 
 
 client.run(os.getenv("DISCORD_TOKEN"))

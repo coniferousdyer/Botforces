@@ -117,7 +117,7 @@ async def convert_submissions_to_string(problems, number):
             int(problem["creationTimeSeconds"])
         )
         if difference.days == 1:
-            submissions += f"(1 day ago)\n"
+            submissions += "(1 day ago)\n"
         else:
             submissions += f"({difference.days} days ago)\n"
 

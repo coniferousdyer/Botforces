@@ -42,6 +42,13 @@ class Plot(commands.Cog):
 
         async with ctx.typing():
             problemList = await get_user_submissions(ctx, handle)
+
+            if problemList is None:
+                await ctx.send(
+                    f":x: Sorry, user with handle {handle} could not be found."
+                )
+                return
+
             problemList = list(
                 filter(lambda problem: problem["verdict"] == "OK", problemList)
             )
@@ -61,9 +68,9 @@ class Plot(commands.Cog):
                 await ctx.send(f"{handle} has not solved any problems!")
                 return
 
-            resDict = sort_dict_by_value(resDict)
-            File = plot_rating_bar_chart(resDict)
-            Embed = create_rating_plot_embed(handle, ctx.author)
+            resDict = await sort_dict_by_value(resDict)
+            File = await plot_rating_bar_chart(resDict)
+            Embed = await create_rating_plot_embed(handle, ctx.author)
 
         # Sending embed
         await ctx.send(file=File, embed=Embed)
@@ -79,29 +86,35 @@ class Plot(commands.Cog):
             await ctx.send(":x: Please provide a handle.")
             return
 
-        problemList = await get_user_submissions(ctx, handle)
-        problemList = list(
-            filter(lambda problem: problem["verdict"] == "OK", problemList)
-        )
+        async with ctx.typing():
+            problemList = await get_user_submissions(ctx, handle)
 
-        resDict = defaultdict(int)
-        unique_map = {}
+            if problemList is None:
+                await ctx.send(f":x: Sorry, user with handle {handle} could not be found.")
+                return
 
-        for problem in problemList:
-            if "index" in problem["problem"]:
-                # Ensuring that the problem is not a duplicate
-                if problem["problem"]["name"] not in unique_map:
-                    unique_map[problem["problem"]["name"]] = True
-                    index = problem["problem"]["index"][0]
-                    resDict[index] += 1
+            problemList = list(
+                filter(lambda problem: problem["verdict"] == "OK", problemList)
+            )
 
-        if not resDict:
-            await ctx.send(f"{handle} has not solved any problems!")
-            return
+            resDict = defaultdict(int)
+            unique_map = {}
 
-        resDict = await sort_dict_by_value(resDict)
-        File = await plot_index_bar_chart(resDict)
-        Embed = await create_index_plot_embed(handle, ctx.author)
+            for problem in problemList:
+                if "index" in problem["problem"]:
+                    # Ensuring that the problem is not a duplicate
+                    if problem["problem"]["name"] not in unique_map:
+                        unique_map[problem["problem"]["name"]] = True
+                        index = problem["problem"]["index"][0]
+                        resDict[index] += 1
+
+            if not resDict:
+                await ctx.send(f"{handle} has not solved any problems!")
+                return
+
+            resDict = await sort_dict_by_value(resDict)
+            File = await plot_index_bar_chart(resDict)
+            Embed = await create_index_plot_embed(handle, ctx.author)
 
         # Sending embed
         await ctx.send(file=File, embed=Embed)
@@ -119,6 +132,13 @@ class Plot(commands.Cog):
 
         async with ctx.typing():
             problemList = await get_user_submissions(ctx, handle)
+
+            if problemList is None:
+                await ctx.send(
+                    f":x: Sorry, user with handle {handle} could not be found."
+                )
+                return
+
             problemList = list(
                 filter(lambda problem: problem["verdict"] == "OK", problemList)
             )
