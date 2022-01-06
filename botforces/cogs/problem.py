@@ -6,12 +6,12 @@ from discord.ext import commands
 
 from botforces.utils.db import get_problems_from_db
 from botforces.utils.discord_common import create_problem_embed
+from botforces.utils.services import separate_rating_and_tags
 
 
 class Problem(commands.Cog):
     def __init__(self, client):
         self.client = client
-
 
     @commands.command()
     async def problem(self, ctx, *args):
@@ -23,17 +23,9 @@ class Problem(commands.Cog):
         if ctx.message.author == self.client.user or ctx.message.author.bot:
             return
 
-        # Separating the rating and the tags
-        rating = 0
-        tags = []
-        for arg in args:
-            if arg.isdigit():
-                rating = int(arg)
-            else:
-                tags.append(arg)
-
         # Obtaining the problems from the database
-        problemList = get_problems_from_db(rating, tags)
+        rating, tags = await separate_rating_and_tags(args)
+        problemList = await get_problems_from_db(rating, tags)
 
         # In case no problems are found
         if len(problemList) == 0:
@@ -44,11 +36,10 @@ class Problem(commands.Cog):
         problem = problemList[random.randint(0, len(problemList) - 1)]
 
         # Creating an embed
-        Embed = create_problem_embed(problem, ctx.author)
+        Embed = await create_problem_embed(problem, ctx.author)
 
         # Sending embed
         await ctx.send(embed=Embed)
-
 
     @commands.Cog.listener()
     async def on_ready(self):

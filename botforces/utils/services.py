@@ -7,7 +7,7 @@ import datetime
 from botforces.utils.constants import PROBLEM_WEBSITE_URL
 
 
-def sort_dict_by_value(dictionary, reverse=False):
+async def sort_dict_by_value(dictionary, reverse=False):
     """
     Sorts a dictionary by value.
     """
@@ -15,7 +15,7 @@ def sort_dict_by_value(dictionary, reverse=False):
     return dict(sorted(dictionary.items(), key=lambda kv: kv[1], reverse=reverse))
 
 
-def map_rank_to_color(rank):
+async def map_rank_to_color(rank):
     """
     Maps rank to corresponding color.
     """
@@ -40,7 +40,7 @@ def map_rank_to_color(rank):
     return color
 
 
-def check_tags(problem_tags, tags):
+async def check_tags(problem_tags, tags):
     """
     To check if all tags are present in the problem tags.
     """
@@ -52,7 +52,23 @@ def check_tags(problem_tags, tags):
     return count == len(tags)
 
 
-def convert_submissions_to_string(problems, number):
+async def separate_rating_and_tags(args):
+    """
+    Separates out the rating and tags from the arguments.
+    """
+
+    rating = 0
+    tags = []
+    for arg in args:
+        if arg.isdigit():
+            rating = int(arg)
+        else:
+            tags.append(arg)
+
+    return rating, tags
+
+
+async def convert_submissions_to_string(problems, number):
     """
     Takes the last n solved problems and returns the result as a string.
     """
@@ -83,3 +99,39 @@ def convert_submissions_to_string(problems, number):
         count += 1
 
     return submissions, count
+
+
+async def decide_verdict(duel, user_submission, opponent_submission):
+    """
+    Decides the verdict of the last submissions of the users.
+    """
+
+    # Boolean variables to check whether both users solved the problem
+    user_solved = False
+    opponent_solved = False
+
+    # Converting the timestamps to datetime objects
+    user_submission["creationTimeSeconds"] = datetime.datetime.fromtimestamp(
+        user_submission["creationTimeSeconds"]
+    )
+    opponent_submission["creationTimeSeconds"] = datetime.datetime.fromtimestamp(
+        opponent_submission["creationTimeSeconds"]
+    )
+
+    startTime = datetime.datetime.strptime(duel[2], "%Y-%m-%d %H:%M:%S.%f")
+    if (
+        duel[3] == user_submission["problem"]["contestId"]
+        and user_submission["creationTimeSeconds"] > startTime
+        and duel[4] == user_submission["problem"]["index"]
+        and user_submission["verdict"] == "OK"
+    ):
+        user_solved = True
+    if (
+        duel[3] == opponent_submission["problem"]["contestId"]
+        and opponent_submission["creationTimeSeconds"] > startTime
+        and duel[4] == opponent_submission["problem"]["index"]
+        and opponent_submission["verdict"] == "OK"
+    ):
+        opponent_solved = True
+
+    return user_solved, opponent_solved

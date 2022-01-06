@@ -20,14 +20,13 @@ class Upcoming(commands.Cog):
             return
 
         # Obtains the upcoming contests from the database
-        contestList = get_contests_from_db()[::-1]
+        contestList = (await get_contests_from_db())[::-1]
 
         # Creating embed
-        Embed = create_contest_embed(contestList, ctx.author)
+        Embed = await create_contest_embed(contestList, ctx.author)
 
         # Sending embed
         await ctx.send(embed=Embed)
-
 
     @commands.Cog.listener()
     async def on_ready(self):

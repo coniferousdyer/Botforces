@@ -10,7 +10,7 @@ User embeds.
 """
 
 
-def create_user_embed(user, author, color):
+async def create_user_embed(user, author, color):
     """
     Creates an embed with user information.
     """
@@ -63,7 +63,7 @@ Problem embeds.
 """
 
 
-def create_problem_embed(problem, author):
+async def create_problem_embed(problem, author):
     """
     Creates an embed with problem information.
     """
@@ -94,7 +94,7 @@ Upcoming contests embeds.
 """
 
 
-def create_contest_embed(contestList, author):
+async def create_contest_embed(contestList, author):
     """
     Creates an embed with contest information.
     """
@@ -143,7 +143,7 @@ Stalk embeds.
 """
 
 
-def create_submissions_embed(submissions, count, handle, author):
+async def create_submissions_embed(submissions, count, handle, author):
     """
     Creates an embed with information about a user's last n solved problems.
     """
@@ -164,7 +164,7 @@ Graph embeds.
 """
 
 
-def create_rating_plot_embed(handle, author):
+async def create_rating_plot_embed(handle, author):
     """
     Creates an embed with the rating plot of a user.
     """
@@ -180,7 +180,7 @@ def create_rating_plot_embed(handle, author):
     return Embed
 
 
-def create_index_plot_embed(handle, author):
+async def create_index_plot_embed(handle, author):
     """
     Creates an embed with the index plot of a user.
     """
@@ -192,7 +192,7 @@ def create_index_plot_embed(handle, author):
     return Embed
 
 
-def create_tags_plot_embed(handle, author):
+async def create_tags_plot_embed(handle, author):
     """
     Creates an embed with the tags plot of a user.
     """
@@ -209,7 +209,7 @@ Help embeds.
 """
 
 
-def create_general_help_embed(author):
+async def create_general_help_embed(author):
     """
     Displays an embed with instructions on how to use all commands.
     """
@@ -240,11 +240,6 @@ def create_general_help_embed(author):
         inline=False,
     )
     Embed.add_field(
-        name="lockout",
-        value="Challenges another user to a lockout match.",
-        inline=False,
-    )
-    Embed.add_field(
         name="plotrating",
         value="Plots the problems done by a user, grouped by rating.",
         inline=False,
@@ -265,7 +260,7 @@ def create_general_help_embed(author):
     return Embed
 
 
-def create_user_help_embed(author):
+async def create_user_help_embed(author):
     """
     Displays an embed with instructions on how to use the user command.
     """
@@ -279,7 +274,7 @@ def create_user_help_embed(author):
     return Embed
 
 
-def create_stalk_help_embed(author):
+async def create_stalk_help_embed(author):
     """
     Displays an embed with instructions on how to use the stalk command.
     """
@@ -298,87 +293,171 @@ def create_stalk_help_embed(author):
     return Embed
 
 
-def create_problem_help_embed(author):
-    Embed = discord.Embed(title="problem",
-                            description="Displays a random problem of optional rating and/or tags.",
-                            color=0xff0000)
-    Embed.add_field(
-        name="Syntax", value="`-problem` - Displays a random problem.\n`-problem <rating>` - Displays a random problem of that rating.\n`-problem <list_of_tags>` - Displays a random problem of those tags (multiple tags are allowed).\n`-problem <rating> <list_of_tags>` - Displays a random problem of those tags and rating (order does not matter).\n\nNote: For tags like \"binary search\", enclose the tag in double quotes.", inline=False)
-    Embed.set_footer(icon_url=author.avatar_url,
-                        text=str(author))
+async def create_problem_help_embed(author):
+    """
+    Displays an embed with instructions on how to use the problem command.
+    """
 
+    Embed = discord.Embed(
+        title="problem",
+        description="Displays a random problem of optional rating and/or tags.",
+        color=0xFF0000,
+    )
+    Embed.add_field(
+        name="Syntax",
+        value='`-problem` - Displays a random problem.\n`-problem <rating>` - Displays a random problem of that rating.\n`-problem <list_of_tags>` - Displays a random problem of those tags (multiple tags are allowed).\n`-problem <rating> <list_of_tags>` - Displays a random problem of those tags and rating (order does not matter).\n\nNote: For tags like "binary search", enclose the tag in double quotes.',
+        inline=False,
+    )
+    Embed.set_footer(icon_url=author.avatar_url, text=str(author))
 
     return Embed
 
 
-def create_upcoming_help_embed(author):
-    Embed = discord.Embed(title="upcoming",
-                                  description="Displays information about upcoming contests.",
-                                  color=0xff0000)
-    Embed.add_field(
-        name="Syntax", value="`-upcoming`", inline=False)
-    Embed.set_footer(icon_url=author.avatar_url,
-                        text=str(author))
+async def create_upcoming_help_embed(author):
+    """
+    Displays an embed with instructions on how to use the upcoming command.
+    """
 
-
-    return Embed
-
-
-def create_duel_help_embed(author):
-    Embed = discord.Embed(title="duel",
-                                  description="Challenges another user to a duel over a problem.",
-                                  color=0xff0000)
-    Embed.add_field(
-        name="Syntax", value="`-duel @<discord_user> <optional_rating> <optional_tags>` - To challenge a user\n`-endduel` - To end a duel and decide the result (only if a duel is in progress).", inline=False)
-    Embed.set_footer(icon_url=author.avatar_url,
-                        text=str(author))
+    Embed = discord.Embed(
+        title="upcoming",
+        description="Displays information about upcoming contests.",
+        color=0xFF0000,
+    )
+    Embed.add_field(name="Syntax", value="`-upcoming`", inline=False)
+    Embed.set_footer(icon_url=author.avatar_url, text=str(author))
 
     return Embed
 
 
-def create_plotrating_help_embed(author):
-    Embed = discord.Embed(title="plotrating",
-                            description="Plots the problems done by a user, grouped by rating.",
-                            color=0xff0000)
+async def create_duel_help_embed(author):
+    """
+    Displays an embed with instructions on how to use the duel command.
+    """
+
+    Embed = discord.Embed(
+        title="duel",
+        description="Challenges another user to a duel over a problem.",
+        color=0xFF0000,
+    )
     Embed.add_field(
-        name="Syntax", value="`-plotrating <codeforces_handle>`", inline=False)
-    Embed.set_footer(icon_url=author.avatar_url,
-                        text=str(author))
+        name="Syntax",
+        value="`-duel @<discord_user> <optional_rating> <optional_tags>` - To challenge a user\n`-endduel` - To end a duel and decide the result (only if a duel is in progress).",
+        inline=False,
+    )
+    Embed.set_footer(icon_url=author.avatar_url, text=str(author))
 
     return Embed
 
 
-def create_plotindex_help_embed(author):
-    Embed = discord.Embed(title="plotindex",
-                                  description="Plots the problems done by a user, grouped by contest index.",
-                                  color=0xff0000)
-    Embed.add_field(
-        name="Syntax", value="`-plotindex <codeforces_handle>`", inline=False)
-    Embed.set_footer(icon_url=author.avatar_url,
-                        text=str(author))
-    
-    return Embed
+async def create_plotrating_help_embed(author):
+    """
+    Displays an embed with instructions on how to use the plotrating command.
+    """
 
-
-def create_plottags_help_embed(author):
-    Embed = discord.Embed(title="plottags",
-                                  description="Plots the problems done by a user, grouped by tags.",
-                                  color=0xff0000)
+    Embed = discord.Embed(
+        title="plotrating",
+        description="Plots the problems done by a user, grouped by rating.",
+        color=0xFF0000,
+    )
     Embed.add_field(
-        name="Syntax", value="`-plottags <codeforces_handle>`", inline=False)
-    Embed.set_footer(icon_url=author.avatar_url,
-                        text=str(author))
+        name="Syntax", value="`-plotrating <codeforces_handle>`", inline=False
+    )
+    Embed.set_footer(icon_url=author.avatar_url, text=str(author))
 
     return Embed
 
 
-def create_lockout_help_embed(author):
-    Embed = discord.Embed(title="lockout",
-                            description="Challenges another user to a lockout match.",
-                            color=0xff0000)
+async def create_plotindex_help_embed(author):
+    """
+    Displays an embed with instructions on how to use the plotindex command.
+    """
+
+    Embed = discord.Embed(
+        title="plotindex",
+        description="Plots the problems done by a user, grouped by contest index.",
+        color=0xFF0000,
+    )
     Embed.add_field(
-        name="Syntax", value="`-lockout @<discord_user>` - To challenge a user\n", inline=False)
-    Embed.set_footer(icon_url=author.avatar_url,
-                        text=str(author))
+        name="Syntax", value="`-plotindex <codeforces_handle>`", inline=False
+    )
+    Embed.set_footer(icon_url=author.avatar_url, text=str(author))
+
+    return Embed
+
+
+async def create_plottags_help_embed(author):
+    """
+    Displays an embed with instructions on how to use the plottags command.
+    """
+
+    Embed = discord.Embed(
+        title="plottags",
+        description="Plots the problems done by a user, grouped by tags.",
+        color=0xFF0000,
+    )
+    Embed.add_field(
+        name="Syntax", value="`-plottags <codeforces_handle>`", inline=False
+    )
+    Embed.set_footer(icon_url=author.avatar_url, text=str(author))
+
+    return Embed
+
+
+"""
+Duel embeds.
+"""
+
+
+async def create_duel_begin_embed(problem, author, opponent):
+    """
+    Displays an embed with information about the duel.
+    """
+
+    Embed = discord.Embed(
+        title=f"{problem[0]}{problem[1]}. {problem[2]}",
+        url=f"{PROBLEM_WEBSITE_URL}{problem[0]}/{problem[1]}",
+        description="The duel starts now!",
+        color=0xFF0000,
+    )
+
+    Embed.add_field(name="Rating", value=problem[4], inline=False)
+
+    # Printing the tags in spoilers
+    if problem[3] != "[]":
+        tags = problem[3].split(", ")
+        tags = [tag.strip("[]'") for tag in tags]
+        tags = map(lambda str: "||" + str + "||", tags)
+        tags = ",".join(tags)
+        Embed.add_field(name="Tags", value=tags)
+
+    Embed.add_field(
+        name="Duel",
+        value=f"{author.display_name} vs {opponent.display_name}",
+        inline=False,
+    )
+
+    return Embed
+
+
+async def create_duels_embed(duels):
+    """
+    Displays an embed with information about all ongoing duels.
+    """
+
+    Embed = discord.Embed(
+        title="Ongoing duels",
+        color=0xFF0000,
+    )
+
+    # Adding fields to embed
+    for duel in duels:
+        date = datetime.datetime.strptime(duel[2], "%Y-%m-%d %H:%M:%S.%f").strftime(
+            "%d %b, %Y %H:%M:%S %Z"
+        )
+        Embed.add_field(
+            name=f"{duel[5]} vs {duel[6]}",
+            value=f"Problem: {PROBLEM_WEBSITE_URL}{duel[3]}/{duel[4]}\nStart Time: {date}",
+            inline=False,
+        )
 
     return Embed

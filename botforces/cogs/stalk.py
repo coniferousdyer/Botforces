@@ -10,7 +10,6 @@ class Stalk(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-
     @commands.command()
     async def stalk(self, ctx, handle=None, number=NUMBER_OF_ACS):
         """
@@ -39,7 +38,7 @@ class Stalk(commands.Cog):
             problems = list(
                 filter(lambda problem: problem["verdict"] == "OK", problems)
             )
-            submissions, count = convert_submissions_to_string(problems, number)
+            submissions, count = await convert_submissions_to_string(problems, number)
 
             # Checking if user has made any submissions
             if submissions == "":
@@ -47,11 +46,12 @@ class Stalk(commands.Cog):
                 return
 
             # Creating an embed
-            Embed = create_submissions_embed(submissions, count, handle, ctx.author)
+            Embed = await create_submissions_embed(
+                submissions, count, handle, ctx.author
+            )
 
         # Sending the embed
         await ctx.send(embed=Embed)
-
 
     @commands.Cog.listener()
     async def on_ready(self):

@@ -95,9 +95,9 @@ class Plot(commands.Cog):
             await ctx.send(f"{handle} has not solved any problems!")
             return
 
-        resDict = sort_dict_by_value(resDict)
-        File = plot_index_bar_chart(resDict)
-        Embed = create_index_plot_embed(handle, ctx.author)
+        resDict = await sort_dict_by_value(resDict)
+        File = await plot_index_bar_chart(resDict)
+        Embed = await create_index_plot_embed(handle, ctx.author)
 
         # Sending embed
         await ctx.send(file=File, embed=Embed)
@@ -136,9 +136,9 @@ class Plot(commands.Cog):
                 await ctx.send(f"{handle} has not solved any problems!")
                 return
 
-            resDict = sort_dict_by_value(resDict)
-            File = plot_tags_bar_chart(resDict)
-            Embed = create_tags_plot_embed(handle, ctx.author)
+            resDict = await sort_dict_by_value(resDict)
+            File = await plot_tags_bar_chart(resDict)
+            Embed = await create_tags_plot_embed(handle, ctx.author)
 
         # Sending embed
         await ctx.send(file=File, embed=Embed)

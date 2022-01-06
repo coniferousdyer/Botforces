@@ -50,3 +50,19 @@ async def get_user_submissions(ctx, handle):
                     return None
                 data = await r.json()
                 return data["result"]
+
+
+async def get_users_last_submission(ctx, duel):
+    """
+    Gets the last submission of the users from the Codeforces API.
+    """
+    async with ctx.typing():
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"{SUBMISSION_URL}{duel[5]}&from=1&count=1") as r1:
+                async with session.get(
+                    f"{SUBMISSION_URL}{duel[6]}&from=1&count=1"
+                ) as r2:
+                    data_1 = await r1.json()
+                    data_2 = await r2.json()
+
+    return data_1["result"][0], data_2["result"][0]

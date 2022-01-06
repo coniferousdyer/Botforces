@@ -36,7 +36,7 @@ async def on_ready():
     # Setting the bot activity on Discord
     await client.change_presence(activity=discord.Game(name="Codeforces"))
     update_db.start()
-    create_duels_table()
+    await create_duels_table()
 
     print("Bot is online!")
 
@@ -47,8 +47,8 @@ async def update_db():
     Updates the database periodically (per hour).
     """
 
-    create_contests_table()
-    create_problems_table()
+    await create_contests_table()
+    await create_problems_table()
 
     # Obtaining the list of all upcoming contests
     contests = await get_all_upcoming_contests()
@@ -56,7 +56,7 @@ async def update_db():
     # Storing the contests in the database
     for contest in contests:
         if contest["phase"] == "BEFORE":
-            store_contest(contest)
+            await store_contest(contest)
         else:
             break
 
@@ -65,7 +65,7 @@ async def update_db():
 
     # Storing the problems in the database
     for problem in problems:
-        store_problem(problem)
+        await store_problem(problem)
 
 
 client.run(os.getenv("DISCORD_TOKEN"))

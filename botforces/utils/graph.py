@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_rating_bar_chart(rating_dict):
+async def plot_rating_bar_chart(rating_dict):
     """
     Plots the rating bar chart.
     """
@@ -18,9 +18,9 @@ def plot_rating_bar_chart(rating_dict):
     plt.ylabel("Number", fontsize=7)
 
     for i in range(len(y)):
-        plt.annotate(
-            str(y[i]), xy=(x[i], y[i]), ha="center", va="bottom"
-        ).set_fontsize(7)
+        plt.annotate(str(y[i]), xy=(x[i], y[i]), ha="center", va="bottom").set_fontsize(
+            7
+        )
 
     # Saving file temporarily
     plt.savefig("figure.png")
@@ -29,7 +29,7 @@ def plot_rating_bar_chart(rating_dict):
     return File
 
 
-def plot_index_bar_chart(tag_dict):
+async def plot_index_bar_chart(tag_dict):
     """
     Plots the index bar chart.
     """
@@ -44,9 +44,9 @@ def plot_index_bar_chart(tag_dict):
     plt.ylabel("Number", fontsize=7)
 
     for i in range(len(y)):
-        plt.annotate(
-            str(y[i]), xy=(x[i], y[i]), ha="center", va="bottom"
-        ).set_fontsize(7)
+        plt.annotate(str(y[i]), xy=(x[i], y[i]), ha="center", va="bottom").set_fontsize(
+            7
+        )
 
     # Saving file temporarily
     plt.savefig("figure.png")
@@ -55,7 +55,7 @@ def plot_index_bar_chart(tag_dict):
     return File
 
 
-def plot_tags_bar_chart(tag_dict):
+async def plot_tags_bar_chart(tag_dict):
     """
     Plots the tags bar chart.
     """
@@ -69,9 +69,9 @@ def plot_tags_bar_chart(tag_dict):
     plt.ylabel("Number", fontsize=7)
 
     for i in range(len(y)):
-        plt.annotate(
-            str(y[i]), xy=(x[i], y[i]), ha="center", va="bottom"
-        ).set_fontsize(7)
+        plt.annotate(str(y[i]), xy=(x[i], y[i]), ha="center", va="bottom").set_fontsize(
+            7
+        )
 
     # Saving file temporarily
     plt.savefig("figure.png")

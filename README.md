@@ -20,7 +20,7 @@ user|`-user <handle>`|Displays information about the Codeforces user with the re
 |plottags|`-plottags <handle>`|Plots the problems done by a user, grouped by tags.
 |duel|`-duel <user_mention> <optional_rating> <optional_tags`|Challenges the mentioned user to a duel (over a problem of the provided rating/tags, if mentioned).
 |endduel (only if a duel is in progress)|`-endduel`|If sent by one of the users in a duel, ends the duel and checks the result to see who won.
-|lockout|`-lockout <user_mention>`|Challenges the mentioned user to a lockout match.
+|-duelstats|`-duelstats`|Displays information about all ongoing duels.
 
 ## Setup
 

@@ -35,10 +35,10 @@ class User(commands.Cog):
             else:
                 rank = None
 
-            color = map_rank_to_color(rank)
+            color = await map_rank_to_color(rank)
 
             # Creating an embed
-            Embed = create_user_embed(user, ctx.author, color)
+            Embed = await create_user_embed(user, ctx.author, color)
 
         # Sending the embed
         await ctx.send(embed=Embed)

@@ -10,8 +10,8 @@ class Error(commands.Cog):
         """
         The error handler.
         """
-        
-        message = ''
+
+        message = ""
 
         if isinstance(error, commands.CommandNotFound):
             message = ":x: The command was not found! Type `-help` to check the list of available commands."
@@ -23,7 +23,7 @@ class Error(commands.Cog):
             message = ":x: Something went wrong while running the command!"
             print(error)
 
-        if message != '':
+        if message != "":
             await ctx.send(message)
 
     @commands.Cog.listener()

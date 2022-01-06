@@ -10,7 +10,6 @@ from botforces.utils.discord_common import (
     create_plotrating_help_embed,
     create_plotindex_help_embed,
     create_plottags_help_embed,
-    create_lockout_help_embed,
 )
 
 
@@ -28,43 +27,39 @@ class Help(commands.Cog):
 
         # If no parameter was provided
         if cmd == None:
-            Embed = create_general_help_embed(ctx.author)
+            Embed = await create_general_help_embed(ctx.author)
             await ctx.send(embed=Embed)
 
         elif cmd == "user":
-            Embed = create_user_help_embed(ctx.author)
+            Embed = await create_user_help_embed(ctx.author)
             await ctx.send(embed=Embed)
 
         elif cmd == "stalk":
-            Embed = create_stalk_help_embed(ctx.author)
+            Embed = await create_stalk_help_embed(ctx.author)
             await ctx.send(embed=Embed)
 
         elif cmd == "problem":
-            Embed = create_problem_help_embed(ctx.author)
+            Embed = await create_problem_help_embed(ctx.author)
             await ctx.send(embed=Embed)
 
         elif cmd == "upcoming":
-            Embed = create_upcoming_help_embed(ctx.author)
+            Embed = await create_upcoming_help_embed(ctx.author)
             await ctx.send(embed=Embed)
 
-        elif cmd == "duel":
-            Embed = create_duel_help_embed(ctx.author)
+        elif cmd == "duel" or cmd == "endduel":
+            Embed = await create_duel_help_embed(ctx.author)
             await ctx.send(embed=Embed)
 
         elif cmd == "plotrating":
-            Embed = create_plotrating_help_embed(ctx.author)
+            Embed = await create_plotrating_help_embed(ctx.author)
             await ctx.send(embed=Embed)
 
         elif cmd == "plotindex":
-            Embed = create_plotindex_help_embed(ctx.author)
+            Embed = await create_plotindex_help_embed(ctx.author)
             await ctx.send(embed=Embed)
 
         elif cmd == "plottags":
-            Embed = create_plottags_help_embed(ctx.author)
-            await ctx.send(embed=Embed)
-
-        elif cmd == "lockout":
-            Embed = create_lockout_help_embed(ctx.author)
+            Embed = await create_plottags_help_embed(ctx.author)
             await ctx.send(embed=Embed)
 
         # If an invalid command was given
