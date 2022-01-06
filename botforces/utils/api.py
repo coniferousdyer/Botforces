@@ -1,3 +1,8 @@
+"""
+The API module interacts with the Codeforces API, obtaining real-time data about user, problem and contest statistics.
+"""
+
+
 import aiohttp
 
 from botforces.utils.constants import USER_URL, CONTEST_URL, PROBLEM_URL, SUBMISSION_URL

@@ -1,4 +1,10 @@
+"""
+The Error class, containing all the commands related to internal error handling.
+"""
+
+
 from discord.ext import commands
+import logging
 
 
 class Error(commands.Cog):
@@ -21,14 +27,14 @@ class Error(commands.Cog):
             message = ":x: Too many arguments were provided!"
         else:
             message = ":x: Something went wrong while running the command!"
-            print(error)
+            logging.error(error)
 
         if message != "":
             await ctx.send(message)
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("-Error ready!")
+        logging.info("-Error ready!")
 
 
 def setup(client):

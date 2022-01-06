@@ -1,3 +1,9 @@
+"""
+The Help class, containing the custom help command.
+"""
+
+
+import logging
 from discord.ext import commands
 
 from botforces.utils.discord_common import (
@@ -68,7 +74,7 @@ class Help(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("-Help ready!")
+        logging.info("-Help ready!")
 
 
 def setup(client):

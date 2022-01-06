@@ -1,7 +1,10 @@
-import discord
-import sqlite3
+"""
+The Problem class, containing all the commands related to problem suggestion.
+"""
+
+
 import random
-from discord.embeds import Embed
+import logging
 from discord.ext import commands
 
 from botforces.utils.db import get_problems_from_db
@@ -43,7 +46,7 @@ class Problem(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("-Problem ready!")
+        logging.info("-Problem ready!")
 
 
 def setup(client):

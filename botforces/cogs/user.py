@@ -1,3 +1,9 @@
+"""
+The User class, containing all the commands related to user information.
+"""
+
+
+import logging
 from discord.ext import commands
 
 from botforces.utils.api import get_user_by_handle
@@ -45,7 +51,7 @@ class User(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("-User ready!")
+        logging.info("-User ready!")
 
 
 def setup(client):

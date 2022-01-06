@@ -1,6 +1,11 @@
 import aiosqlite
 import datetime
 
+"""
+The DB module interacts with the database, storing, retrieving and deleting data.
+"""
+
+
 from botforces.utils.services import check_tags
 
 

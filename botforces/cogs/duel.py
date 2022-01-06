@@ -1,3 +1,9 @@
+"""
+The Duel class, containing all the commands related to the dueling system.
+"""
+
+
+import logging
 import discord
 import asyncio
 import random
@@ -188,7 +194,7 @@ class Duel(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("-Duel ready!")
+        logging.info("-Duel ready!")
 
 
 def setup(client):

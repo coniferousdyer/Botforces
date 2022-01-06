@@ -1,3 +1,8 @@
+"""
+Contains functions related to Discord-specific features, such as embeds.
+"""
+
+
 import discord
 import datetime
 import time
@@ -452,11 +457,11 @@ async def create_duels_embed(duels):
     # Adding fields to embed
     for duel in duels:
         date = datetime.datetime.strptime(duel[2], "%Y-%m-%d %H:%M:%S.%f").strftime(
-            "%d %b, %Y %H:%M:%S %Z"
+            "%b %d, %Y %H:%M:%S"
         )
         Embed.add_field(
             name=f"{duel[5]} vs {duel[6]}",
-            value=f"Problem: {PROBLEM_WEBSITE_URL}{duel[3]}/{duel[4]}\nStart Time: {date}",
+            value=f"Problem: {PROBLEM_WEBSITE_URL}{duel[3]}/{duel[4]}\nStart Time: {date} {time.tzname[0]}",
             inline=False,
         )
 

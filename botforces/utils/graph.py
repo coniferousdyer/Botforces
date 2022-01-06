@@ -1,3 +1,8 @@
+"""
+Takes care of plotting and data visualization.
+"""
+
+
 import discord
 import matplotlib.pyplot as plt
 import numpy as np

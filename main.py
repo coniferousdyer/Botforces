@@ -1,7 +1,14 @@
+"""
+The main module; the entry point of the bot.
+"""
+
+
 import discord
 import os
 from discord.ext import tasks, commands
 from dotenv import load_dotenv
+import logging
+from logging.handlers import RotatingFileHandler
 
 from botforces.utils.api import get_all_problems, get_all_upcoming_contests
 from botforces.utils.db import (
@@ -33,12 +40,25 @@ async def on_ready():
     Called when the bot is ready.
     """
 
+    # Creating a directory to store logs
+    if not os.path.exists("./logs"):
+        os.mkdir("./logs")
+
+    # Setting up the logger
+    logging.basicConfig(
+        handlers=[
+            RotatingFileHandler("./logs/botforces.log", maxBytes=100000, backupCount=10)
+        ],
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        level=logging.INFO,
+    )
+
     # Setting the bot activity on Discord
     await client.change_presence(activity=discord.Game(name="Codeforces"))
     update_db.start()
     await create_duels_table()
 
-    print("Bot is online!")
+    logging.info("Bot is online!")
 
 
 @tasks.loop(hours=1)
@@ -53,6 +73,8 @@ async def update_db():
     # Obtaining the list of all upcoming contests
     contests = await get_all_upcoming_contests()
 
+    logging.info(f"Updated contests.")
+
     # Storing the contests in the database
     for contest in contests:
         if contest["phase"] == "BEFORE":
@@ -66,6 +88,8 @@ async def update_db():
     # Storing the problems in the database
     for problem in problems:
         await store_problem(problem)
+
+    logging.info(f"Updated problems.")
 
 
 client.run(os.getenv("DISCORD_TOKEN"))

@@ -1,6 +1,7 @@
 """
-Service functions for cogs.
+Contains service and utility functions for cogs.
 """
+
 
 import datetime
 

@@ -1,3 +1,9 @@
+"""
+The Plot class, containing the commands related to plotting of problem statistics.
+"""
+
+
+import logging
 import os
 from discord.ext import commands
 from collections import defaultdict
@@ -146,7 +152,7 @@ class Plot(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("-Plot ready!")
+        logging.info("-Plot ready!")
 
 
 def setup(client):

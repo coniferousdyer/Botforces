@@ -1,4 +1,10 @@
+"""
+The Stalk class, containing all the commands related to history of problems solved by users.
+"""
+
+
 from discord.ext import commands
+import logging
 
 from botforces.utils.constants import NUMBER_OF_ACS
 from botforces.utils.api import get_user_submissions
@@ -55,7 +61,7 @@ class Stalk(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("-Stalk ready!")
+        logging.info("-Stalk ready!")
 
 
 def setup(client):

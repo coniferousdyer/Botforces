@@ -1,3 +1,9 @@
+"""
+The Upcoming class, containing the commands related to upcoming contests.
+"""
+
+
+import logging
 from discord.ext import commands
 
 from botforces.utils.db import get_contests_from_db
@@ -30,7 +36,7 @@ class Upcoming(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print("-Upcoming ready!")
+        logging.info("-Upcoming ready!")
 
 
 def setup(client):
