@@ -16,13 +16,18 @@ class User(commands.Cog):
         self.client = client
 
     @commands.command()
-    async def user(self, ctx, handle):
+    async def user(self, ctx, handle=None):
         """
         Searches for a user and displays their basic details.
         """
 
         # Checking if the author was a bot
         if ctx.message.author == self.client.user or ctx.message.author.bot:
+            return
+
+        # Checking if the user provided a handle
+        if handle is None:
+            await ctx.send(":x: No handle was provided!\n")
             return
 
         # Displays the "typing..." message while the data is being fetched

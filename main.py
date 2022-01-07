@@ -20,10 +20,9 @@ from botforces.utils.db import (
     store_problem,
 )
 
-
-client = commands.Bot(command_prefix="-", help_command=None)
-
 load_dotenv()
+
+client = commands.Bot(command_prefix=os.getenv("BOT_PREFIX"), help_command=None)
 
 # Loading cogs
 for filename in os.listdir("botforces/cogs"):

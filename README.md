@@ -87,7 +87,7 @@ pip install -r requirements.txt
 ```bash
 cp .env.template .env
 ```
-* Edit the created `.env` file and replace the `PASTE TOKEN HERE` with the token that you copied earlier. You can also set your preferred command prefix.
+* Edit the created `.env` file and replace the `PASTE TOKEN HERE` with the token that you copied earlier. You can also set your preferred command prefix (`-` by default).
 
 * Optionally, you can set up error logging with Sentry for the bot. All you need to do is copy the Sentry DSN from the Sentry website and paste it in the `SENTRY_DSN` variable in the `.env` file. Note, however, that this is not required for the bot to run.
 
