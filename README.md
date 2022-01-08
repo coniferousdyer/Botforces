@@ -54,6 +54,10 @@ user|`-user <handle>`|Displays information about the Codeforces user with the re
 
 ## Setup
 
+If you would rather not go through the hassle of setting up the bot locally, you can use the [invite link](https://discord.com/api/oauth2/authorize?client_id=873139272377573426&permissions=534723951680&scope=bot) instead to add the bot to your server.
+
+But if you do wish to set it up locally, you can do so by following the steps below.
+
 ### I. Getting your token
 
 Follow the steps <a href="https://github.com/reactiflux/discord-irc/wiki/Creating-a-discord-bot-&-getting-a-token">here</a> to obtain your token and add the bot to the server. You will need it in order to run your bot successfully.
