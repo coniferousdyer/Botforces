@@ -1,12 +1,12 @@
-aiohttp==3.7.4
+aiohttp==3.8.1
 aiosignal==1.2.0
 aiosqlite==0.17.0
-async-timeout==3.0.1
+async-timeout==4.0.2
 attrs==21.2.0
 beautifulsoup4==4.9.3
 black==21.12b0
 certifi==2021.10.8
-chardet==3.0.4
+chardet==4.0.0
 charset-normalizer==2.0.10
 click==8.0.3
 cycler==0.10.0
