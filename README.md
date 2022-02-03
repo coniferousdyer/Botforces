@@ -127,4 +127,4 @@ I'm open to PRs, so if you would like to change, improve or add something, feel 
 
 ## License
 
-This software is open source, licensed under the (MIT License)[https://github.com/coniferousdyer/Botforces/blob/master/LICENSE].
+This software is open source, licensed under the [MIT License](https://github.com/coniferousdyer/Botforces/blob/master/LICENSE).
