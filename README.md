@@ -125,4 +125,6 @@ Keep in mind though, that if you close the terminal, the program will terminate 
 
 I'm open to PRs, so if you would like to change, improve or add something, feel free to make a PR. Contributions are always welcome!
 
+## License
 
+This software is open source, licensed under the (MIT License)[https://github.com/coniferousdyer/Botforces/blob/master/LICENSE].
