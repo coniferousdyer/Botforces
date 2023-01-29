@@ -90,7 +90,9 @@ class Plot(commands.Cog):
             problemList = await get_user_submissions(ctx, handle)
 
             if problemList is None:
-                await ctx.send(f":x: Sorry, user with handle {handle} could not be found.")
+                await ctx.send(
+                    f":x: Sorry, user with handle {handle} could not be found."
+                )
                 return
 
             problemList = list(

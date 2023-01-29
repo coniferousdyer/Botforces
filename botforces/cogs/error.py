@@ -27,7 +27,7 @@ class Error(commands.Cog):
             message = ":x: Too many arguments were provided!"
         else:
             message = ":x: Something went wrong while running the command!"
-            logging.error(error)
+            logging.exception(error)
 
         if message != "":
             await ctx.send(message)

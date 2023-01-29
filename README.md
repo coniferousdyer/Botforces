@@ -8,7 +8,7 @@
 
 [![made-with-python](https://img.shields.io/badge/Made%20with-Python-red.svg)](https://www.python.org/)
 [![GitHub issues](https://img.shields.io/github/issues/coniferousdyer/Botforces)](https://github.com/coniferousdyer/Botforces/issues)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg?style=flat-square)](http://makeapullrequest.com) 
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg?style=flat-square)](http://makeapullrequest.com)
 
 </div>
 
@@ -37,8 +37,10 @@ The prefix here has been assumed to be `-`, but you can set it to whatever you l
 |help|`-help`|Displays all the available commands.|
 ||`-help <command>`|Displays what the command does, as well as its syntax.
 user|`-user <handle>`|Displays information about the Codeforces user with the requested handle.
+|register|`-register <handle>`|Stores a mapping between the Discord account that sent the command and the Codeforces handle.
+|unregister|`-unregister`|Removes a stored mapping if any between the Discord account that sent the command and their stored Codeforces handle.
 |upcoming|`-upcoming`|Displays the upcoming Codeforces contests, along with the date, time and duration.
-|problem|`-problem`|Displays a random problem.
+|problem|`-problem`|Displays a random problem (unsolved by the user if registered).
 ||`-problem <rating>`|Displays a random problem of that rating.
 ||`-problem <tags>`|Displays a random problem having the requested tags (can include multiple tags, tags with more than one word must be enclosed in double quotes, for eg. "binary search")
 ||`-problem <rating> <tags>`|Displays a random problem of that rating and having the requested tags. The order does not matter.
@@ -115,12 +117,22 @@ You're all set! The bot should be online now.
 
 Keep in mind though, that if you close the terminal, the program will terminate and the bot will go offline.
 
+### IV. User Registration
+
+While Botforces does provide unsolved problems only as part of the problem suggestion feature, this is possible only if the user performs the `register` command. A registration is basically a mapping between their Discord account and a Codeforces handle of their choice. This mapping would be used by the `problem` command to ensure that suggested problems have not been solved by the user.
+
+In order to do this, send the following command via Discord text after the bot has been added to the server. For example, if my Codeforces handle is "abcdef",
+```
+-register abcdef
+```
+
+The bot would automatically store the mapping between your Discord account and the "abcdef" account on Codeforces. Now, if this Discord user requests a problem, they would only get problems that have not been solved by "abcdef" on Codeforces.
+
 <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/fire.png"><br>
 
 ## Future Plans/Issues
 
 * Contest Reminders
-* Ensuring users get only unsolved problems to solve
 * Expanding to other popular competitive programming sites such as AtCoder, Codechef, etc.
 
 I'm open to PRs, so if you would like to change, improve or add something, feel free to make a PR. Contributions are always welcome!

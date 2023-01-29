@@ -217,11 +217,25 @@ async def create_general_help_embed(author):
         name="user", value="Displays information about a user.", inline=False
     )
     Embed.add_field(
+        name="register",
+        value="Stores a mapping between Discord account and Codeforces handle.",
+        inline=False,
+    )
+    Embed.add_field(
+        name="unregister",
+        value="Removes a mapping between Discord account and Codeforces handle.",
+        inline=False,
+    )
+    Embed.add_field(
         name="stalk",
         value="Displays the last n problems solved by a user.",
         inline=False,
     )
-    Embed.add_field(name="problem", value="Displays a random problem.", inline=False)
+    Embed.add_field(
+        name="problem",
+        value="Displays a random problem (unsolved by the user if registered).",
+        inline=False,
+    )
     Embed.add_field(
         name="upcoming",
         value="Displays the list of upcoming Codeforces contests.",
@@ -267,6 +281,40 @@ async def create_user_help_embed(author):
     return Embed
 
 
+async def create_register_help_embed(author):
+    """
+    Displays an embed with instructions on how to use the register command.
+    """
+
+    Embed = discord.Embed(
+        title="register",
+        description="Stores a mapping between Discord account and Codeforces handle. The Discord account is the one that sent the message.",
+        color=0xFF0000,
+    )
+    Embed.add_field(
+        name="Syntax", value="`-register <codeforces_handle>`", inline=False
+    )
+    Embed.set_footer(icon_url=author.avatar_url, text=str(author))
+
+    return Embed
+
+
+async def create_unregister_help_embed(author):
+    """
+    Displays an embed with instructions on how to use the unregister command.
+    """
+
+    Embed = discord.Embed(
+        title="unregister",
+        description="Removes a mapping between Discord account and Codeforces handle. The Discord account is the one that sent the message.",
+        color=0xFF0000,
+    )
+    Embed.add_field(name="Syntax", value="`-unregister`", inline=False)
+    Embed.set_footer(icon_url=author.avatar_url, text=str(author))
+
+    return Embed
+
+
 async def create_stalk_help_embed(author):
     """
     Displays an embed with instructions on how to use the stalk command.
@@ -293,7 +341,7 @@ async def create_problem_help_embed(author):
 
     Embed = discord.Embed(
         title="problem",
-        description="Displays a random problem of optional rating and/or tags.",
+        description="Displays a random problem of optional rating and/or tags (unsolved by the user if registered).",
         color=0xFF0000,
     )
     Embed.add_field(

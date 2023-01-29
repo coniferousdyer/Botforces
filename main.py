@@ -13,6 +13,7 @@ from discord_sentry_reporting import use_sentry
 
 from botforces.utils.api import get_all_problems, get_all_upcoming_contests
 from botforces.utils.db import (
+    create_users_table,
     create_contests_table,
     create_duels_table,
     create_problems_table,
@@ -59,6 +60,7 @@ async def on_ready():
     # Setting the bot activity on Discord
     await client.change_presence(activity=discord.Game(name="Codeforces"))
     update_db.start()
+    await create_users_table()
     await create_duels_table()
 
     logging.info("Bot is online!")

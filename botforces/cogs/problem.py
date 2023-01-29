@@ -3,13 +3,13 @@ The Problem class, containing all the commands related to problem suggestion.
 """
 
 
-import random
 import logging
 from discord.ext import commands
 
 from botforces.utils.db import get_problems_from_db
 from botforces.utils.discord_common import create_problem_embed
 from botforces.utils.services import separate_rating_and_tags
+from botforces.utils.helpers import get_unsolved_problems
 
 
 class Problem(commands.Cog):
@@ -26,20 +26,33 @@ class Problem(commands.Cog):
         if ctx.message.author == self.client.user or ctx.message.author.bot:
             return
 
-        # Obtaining the problems from the database
-        rating, tags = await separate_rating_and_tags(args)
-        problemList = await get_problems_from_db(rating, tags)
+        # Displays the "typing..." message while the data is being fetched
+        async with ctx.typing():
+            # Obtaining the problems from the database
+            rating, tags = await separate_rating_and_tags(args)
+            problemList = await get_problems_from_db(rating, tags)
 
-        # In case no problems are found
-        if len(problemList) == 0:
-            await ctx.send(":x: Sorry, no problems could be found. Please try again.")
-            return
+            # In case no problems are found
+            if len(problemList) == 0:
+                await ctx.send(
+                    ":x: Sorry, no problems could be found. Please try again."
+                )
+                return
 
-        # Storing a random problem
-        problem = problemList[random.randint(0, len(problemList) - 1)]
+            # Getting a random unsolved problem
+            problem = await get_unsolved_problems(
+                ctx, ctx.message.author.id, problemList
+            )
 
-        # Creating an embed
-        Embed = await create_problem_embed(problem, ctx.author)
+            if problem is None:
+                await ctx.send(
+                    ":x: Sorry, no unsolved problems could be found. Please try again."
+                )
+                return
+
+            # Creating an embed
+            # Note: Here, problem[0] is used because the problem is actually a list of one element
+            Embed = await create_problem_embed(problem[0], ctx.author)
 
         # Sending embed
         await ctx.send(embed=Embed)

@@ -48,6 +48,10 @@ async def get_all_problems():
 
 
 async def get_user_submissions(ctx, handle):
+    """
+    Gets all submissions of a user from the Codeforces API.
+    """
+
     async with ctx.typing():
         async with aiohttp.ClientSession() as session:
             async with session.get(f"{SUBMISSION_URL}{handle}") as r:

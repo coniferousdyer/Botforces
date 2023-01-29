@@ -10,6 +10,8 @@ from botforces.utils.discord_common import (
     create_general_help_embed,
     create_stalk_help_embed,
     create_user_help_embed,
+    create_register_help_embed,
+    create_unregister_help_embed,
     create_problem_help_embed,
     create_upcoming_help_embed,
     create_duel_help_embed,
@@ -37,6 +39,14 @@ class Help(commands.Cog):
 
         elif cmd == "user":
             Embed = await create_user_help_embed(ctx.author)
+            await ctx.send(embed=Embed)
+
+        elif cmd == "register":
+            Embed = await create_register_help_embed(ctx.author)
+            await ctx.send(embed=Embed)
+
+        elif cmd == "unregister":
+            Embed = await create_unregister_help_embed(ctx.author)
             await ctx.send(embed=Embed)
 
         elif cmd == "stalk":
