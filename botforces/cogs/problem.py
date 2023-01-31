@@ -41,7 +41,7 @@ class Problem(commands.Cog):
 
             # Getting a random unsolved problem
             problem = await get_unsolved_problems(
-                ctx, ctx.message.author.id, problemList
+                ctx, [ctx.message.author.id], problemList
             )
 
             if problem is None:

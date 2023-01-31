@@ -23,6 +23,7 @@ from botforces.utils.services import (
     separate_rating_and_tags,
     verify_handles,
 )
+from botforces.utils.helpers import get_unsolved_problems
 
 
 class Duel(commands.Cog):
@@ -116,11 +117,21 @@ class Duel(commands.Cog):
                 return
 
             # Storing problem
-            problem = problemList[random.randint(0, len(problemList) - 1)]
-            Embed = await create_duel_begin_embed(problem, ctx.author, opponent)
+            problem = await get_unsolved_problems(
+                ctx, [handles[1], handles[2]], problemList, handles_provided=True
+            )
+
+            # In case no unsolved problems are found
+            if problem is None:
+                await ctx.send(
+                    ":x: Sorry, no unsolved problems could be found. Please try again."
+                )
+                return
+
+            Embed = await create_duel_begin_embed(problem[0], ctx.author, opponent)
             await ctx.send(embed=Embed)
             await store_duel(
-                problem, ctx.message.author, opponent, handles[1], handles[2]
+                problem[0], ctx.message.author, opponent, handles[1], handles[2]
             )
 
     @commands.command()
